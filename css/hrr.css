@@ -1,6 +1,6 @@
 .map {
-    width:800px;
-    height:400px;
+    width:500px;
+    height:300px;
 }
 
 path {
@@ -10,44 +10,36 @@ path {
 
 .region {
     fill: none;
-    stroke: #777;
+    stroke: #444;
     stroke-linejoin: round;
 }
 
-.empty { fill:white; }
+
+.empty { fill: #bbb; }
+/*.active { 
+	stroke: white; 
+}*/
 
 /* ColorBrewer yellowish-red */
-.hrr_charge { fill: none;}
-.hrr_charge .q0-9 { fill:rgb(255,255,204); }
-.hrr_charge .q1-9 { fill:rgb(255,237,160); }
-.hrr_charge .q2-9 { fill:rgb(254,217,118); }
-.hrr_charge .q3-9 { fill:rgb(254,178,76); }
-.hrr_charge .q4-9 { fill:rgb(253,141,60); }
-.hrr_charge .q5-9 { fill:rgb(252,78,42); }
-.hrr_charge .q6-9 { fill:rgb(227,26,28); }
-.hrr_charge .q7-9 { fill:rgb(189,0,38); }
-.hrr_charge .q8-9 { fill:rgb(128,0,38); }
+.hrr_chrg .q0-5 { fill:rgb(255,255,204); }
+.hrr_chrg .q1-5 { fill:rgb(245,204,92); }
+.hrr_chrg .q2-5 { fill:rgb(253,141,60); }
+.hrr_chrg .q3-5 { fill:rgb(240,59,38); }
+.hrr_chrg .q4-5 { fill:rgb(189,0,38); }
+.hrr_chrg { fill:rgb(189,0,38); stroke: #444; stroke-linejoin: round;}
 
 /* yellow-ish to blue */
-.hrr_pmt { fill: none;}
-.hrr_pmt .q0-9 { fill:rgb(255,255,217); }
-.hrr_pmt .q1-9 { fill:rgb(237,248,217); }
-.hrr_pmt .q2-9 { fill:rgb(199,233,180); }
-.hrr_pmt .q3-9 { fill:rgb(127,205,187); }
-.hrr_pmt .q4-9 { fill:rgb(65,182,196); }
-.hrr_pmt .q5-9 { fill:rgb(29,145,192); }
-.hrr_pmt .q6-9 { fill:rgb(34,94,168); }
-.hrr_pmt .q7-9 { fill:rgb(37,52,148); }
-.hrr_pmt .q8-9 { fill:rgb(8,29,88); }
+.hrr_pmt .q0-5 { fill:rgb(255,255,204); }
+.hrr_pmt .q1-5 { fill:rgb(161,218,180); }
+.hrr_pmt .q2-5 { fill:rgb(65,182,196); }
+.hrr_pmt .q3-5 { fill:rgb(44,127,184); }
+.hrr_pmt .q4-5 { fill:rgb(37,52,148); }
+.hrr_pmt { fill:rgb(37,52,148); stroke: #444; stroke-linejoin: round;}
 
 /* yellowish to green */
-.hrr_reduct { fill: red;}
-.hrr_reduct .q0-9 { fill:rgb(255,255,229); }
-.hrr_reduct .q1-9 { fill:rgb(247,252,185); }
-.hrr_reduct .q2-9 { fill:rgb(217,240,163); }
-.hrr_reduct .q3-9 { fill:rgb(173,221,142); }
-.hrr_reduct .q4-9 { fill:rgb(120,198,121); }
-.hrr_reduct .q5-9 { fill:rgb(65,171,93); }
-.hrr_reduct .q6-9 { fill:rgb(35,132,67); }
-.hrr_reduct .q7-9 { fill:rgb(0,104,55); }
-.hrr_reduct .q8-9 { fill:rgb(0,69,41); }
+.hrr_reduct .q0-5 { fill:rgb(255,255,204); }
+.hrr_reduct .q1-5 { fill:rgb(194,230,153); }
+.hrr_reduct .q2-5 { fill:rgb(120,198,121); }
+.hrr_reduct .q3-5 { fill:rgb(49,163,84); }
+.hrr_reduct .q4-5 { fill:rgb(0,104,55); }
+.hrr_reduct { fill:rgb(0,104,55); stroke: #444; stroke-linejoin: round;}

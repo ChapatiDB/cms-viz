@@ -2,19 +2,16 @@
 
 
 #TODO:
-# - some features showing up black - what does this mean? that it is not classified? 
-#    or out of classification range?
+#  - Simplify the HRR boundaries even more
 
-# - click to zoom: http://bl.ocks.org/mbostock/2206590
-#   when click one map's feature, zoom all maps
 
-width = 800
-height = 600
+width = 400
+height = 300
 
 color = d3.scale.category10()
 
 projection = d3.geo.albersUsa()
-    .scale(800)
+    .scale(500)
     .translate([width / 2, height / 2])
 
 path = d3.geo.path().projection(projection)
@@ -32,84 +29,19 @@ svg3 = d3.select("#map3").append("svg")
 
 
 centered = null
-regions_by_charge = null
-regions_by_pmt = null
-regions_by_reduct = null
 
-
-
-ready = (error, hrr, pmt_info) ->
-    #pi is object of form form {hrr_id: {chrg:, pmt:, reduct:}, ...}
+create_map = (name, svg, hrr, pmt_info) ->
 
     regions = topojson.feature(hrr, hrr.objects.hrr).features
 
     pmt_info_entries = d3.entries(pmt_info)
 
-    scales = {}
-    scales.charge = {}
-    scales.charge.jenks = d3.scale.threshold()
-        .domain(ss.jenks(pmt_info_entries.map((d) -> +d.value.chrg), 9))
-        .range(d3.range(9).map((i) -> "q#{i}-9" ))
+    jenks_breaks = d3.scale.threshold()
+        .domain(ss.jenks(pmt_info_entries.map((d) -> +d.value[name]), 5))
+        .range(d3.range(5).map((i) -> "q#{i}-5" ))
 
-
-
-    regions_by_charge = svg1.append("g")
-            .attr("class", "hrr_charge")
-            .selectAll("path")
-                .data(regions)
-                .enter()
-                    .append("path")
-                    .attr("d", path)
-
-    regions_by_charge
-        .attr("class", (d) -> 
-            if d.properties?.HRRNUM? and pmt_info[d.properties.HRRNUM]?
-                return scales.charge.jenks(pmt_info[d.properties.HRRNUM]['chrg'])
-            return "empty"
-        )
-
-    svg1.append("path")
-        .datum(topojson.mesh(hrr, hrr.objects.hrr))
-        .attr("class", "region")
-        .attr("d", path)
-
-
-    # ----------------------------------
-
-    scales.payment = {}
-    scales.payment.jenks = d3.scale.threshold()
-        .domain(ss.jenks(pmt_info_entries.map((d) -> +d.value.pmt), 9))
-        .range(d3.range(9).map((i) -> "q#{i}-9" ))
-
-    regions_by_pmt = svg2.append("g")
-            .attr("class", "hrr_pmt")
-            .selectAll("path")
-                .data(regions)
-                .enter()
-                    .append("path")
-                    .attr("d", path)
-
-    regions_by_pmt
-        .attr("class", (d) -> 
-            if d.properties?.HRRNUM? and pmt_info[d.properties.HRRNUM]?
-                return scales.payment.jenks(pmt_info[d.properties.HRRNUM]['pmt'])
-            return "empty"
-        )
-
-    svg2.append("path")
-        .datum(topojson.mesh(hrr, hrr.objects.hrr))
-        .attr("class", "region")
-        .attr("d", path)
-
-    # ----------------------------------
-
-    scales.reduct = {}
-    scales.reduct.jenks = d3.scale.threshold()
-        .domain(ss.jenks(pmt_info_entries.map((d) -> +d.value.reduct), 9))
-        .range(d3.range(9).map((i) -> "q#{i}-9" ))
-
-    regions_by_reduct = svg3.append("g")
-            .attr("class", "hrr_reduct")
+    regions = svg.append("g")
+            .attr("class", "hrr_#{name}")
             .selectAll("path")
                 .data(regions)
                 .enter()
@@ -117,21 +49,14 @@ ready = (error, hrr, pmt_info) ->
                     .attr("d", path)
                     .on("click", clicked)
 
-    regions_by_reduct
+    regions
         .attr("class", (d) -> 
             if d.properties?.HRRNUM? and pmt_info[d.properties.HRRNUM]?
-                return scales.reduct.jenks(pmt_info[d.properties.HRRNUM]['reduct'])
+                return jenks_breaks(pmt_info[d.properties.HRRNUM][name])
             return "empty"
         )
 
-    svg3.append("path")
-        .datum(topojson.mesh(hrr, hrr.objects.hrr))
-        .attr("class", "region")
-        .attr("d", path)
-
     return
-
-
 
 
 clicked = (d) ->
@@ -147,18 +72,37 @@ clicked = (d) ->
         k = 1
         centered = null
 
-    regions_by_reduct.selectAll("path")
-        .classed("active", centered and (d) -> return d is centered )
 
-    regions_by_reduct.transition()
-        .duration(750)
-        .attr("transform", "translate(#{width/2},#{height/2})scale(#{k})translate(#{-x},#{-y})")
-        .attr("stroke-width", 1.5/k+"px")
+    moveMap = (svg) ->
+        svg.selectAll("g").selectAll("path")
+            .classed("active", centered and (d) -> return d is centered )
 
-    #modify - need to move all three maps
-    # including the meshes.  just do different selection by each svg
+        svg.selectAll("g").selectAll("path")
+            .transition()
+                .duration(750)
+                .attr("transform", "translate(#{width/2},#{height/2})scale(#{k})translate(#{-x},#{-y})")
+                .attr("stroke-width", 1.5/k+"px")
+        return
+
+    moveMap(svg1)
+    moveMap(svg2)
+    moveMap(svg3)
+    return
+
+
+ready = (error, hrr, pmt_info) ->
+    #pi is object of form form {hrr_id: {chrg:, pmt:, reduct:}, ...}
+    
+    regions = topojson.feature(hrr, hrr.objects.hrr).features
+
+    pmt_info_entries = d3.entries(pmt_info)
+
+    create_map('chrg', svg1, hrr, pmt_info)
+    create_map('pmt', svg2, hrr, pmt_info)
+    create_map('reduct', svg3, hrr, pmt_info)    
 
     return
+
 
 queue()
     .defer(d3.json, "data/hrr.topojson")
