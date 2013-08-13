@@ -40,7 +40,7 @@
   };
 
   updateRegions = function(name, regions, pmt_info) {
-    var jenks_breaks, pmt_info_entries;
+    var jenks_breaks, pmt_info_entries, svg, _i, _len, _ref;
     pmt_info_entries = d3.entries(pmt_info);
     jenks_breaks = d3.scale.threshold().domain(ss.jenks(pmt_info_entries.map(function(d) {
       return +d.value[name];
@@ -54,6 +54,19 @@
       }
       return "empty";
     });
+    if (centered != null) {
+      _ref = [svg1, svg2, svg3];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        svg = _ref[_i];
+        svg.selectAll("g").selectAll("path").classed("active", function(d) {
+          var _ref1, _ref2;
+          if (((_ref1 = d.properties) != null ? _ref1.HRRNUM : void 0) === ((_ref2 = centered.properties) != null ? _ref2.HRRNUM : void 0)) {
+            return true;
+          }
+          return false;
+        });
+      }
+    }
   };
 
   zoomToRegions = function(d) {

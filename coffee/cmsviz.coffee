@@ -73,6 +73,16 @@ updateRegions = (name, regions, pmt_info) ->
         return "empty"
     )
 
+    #need to update selected region with "active" class
+    if centered?
+        for svg in [svg1, svg2, svg3]
+            svg.selectAll("g").selectAll("path")
+                .classed("active", (d) ->
+                    if d.properties?.HRRNUM is centered.properties?.HRRNUM
+                        return true
+                    return false
+                )
+
     return
 
 zoomToRegions = (d) ->

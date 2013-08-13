@@ -30,10 +30,10 @@ select {
 }
 
 path {
-    transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
-    -o-transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
-    -moz-transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
-    -webkit-transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: fill 600ms linear;
+    -o-transition: fill 600ms linear;
+    -moz-transition: fill 600ms linear;
+    -webkit-transition: fill 600ms linear;
 }
 
 .region {
