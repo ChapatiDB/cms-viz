@@ -1,0 +1,74 @@
+body {
+    margin: auto; /* center in viewport */
+    font-family: 'Raleway', sans-serif;
+    text-rendering: optimizeLegibility;
+}
+
+header {
+
+}
+
+strong {
+    font-weight: 600;
+}
+
+select {
+    width: 60%;
+    min-width: 300px;
+    max-width: 600px;
+}
+
+.centered {
+    text-align: center;
+}
+
+.map {
+    width:500px;
+    height:300px;
+    margin:auto;
+    padding:5px;
+}
+
+path {
+    transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
+    -o-transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
+    -moz-transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
+    -webkit-transition: fill 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.region {
+    fill: #bbb;
+}
+
+
+.region_bdry {
+    fill: none;
+    stroke: #777;
+}
+
+.empty { fill: #bbb; }
+.active { 	stroke: white; stroke-width: 1;}
+
+/* ColorBrewer yellowish-red */
+.hrr_chrg .q0-5 { fill:rgb(255,255,204); }
+.hrr_chrg .q1-5 { fill:rgb(245,204,92); }
+.hrr_chrg .q2-5 { fill:rgb(253,141,60); }
+.hrr_chrg .q3-5 { fill:rgb(240,59,38); }
+.hrr_chrg .q4-5 { fill:rgb(189,0,38); }
+.hrr_chrg { fill:rgb(189,0,38); }
+
+/* yellowish to blue */
+.hrr_pmt .q0-5 { fill:rgb(255,255,204); }
+.hrr_pmt .q1-5 { fill:rgb(161,218,180); }
+.hrr_pmt .q2-5 { fill:rgb(65,182,196); }
+.hrr_pmt .q3-5 { fill:rgb(44,127,184); }
+.hrr_pmt .q4-5 { fill:rgb(37,52,148); }
+.hrr_pmt { fill:rgb(37,52,148); }
+
+/* yellowish to green */
+.hrr_reduct .q0-5 { fill:rgb(255,255,204); }
+.hrr_reduct .q1-5 { fill:rgb(194,230,153); }
+.hrr_reduct .q2-5 { fill:rgb(120,198,121); }
+.hrr_reduct .q3-5 { fill:rgb(49,163,84); }
+.hrr_reduct .q4-5 { fill:rgb(0,104,55); }
+.hrr_reduct { fill:rgb(0,104,55); }
