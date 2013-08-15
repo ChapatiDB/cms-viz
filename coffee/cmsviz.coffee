@@ -118,8 +118,9 @@ updateRegions = (name, pmt_info) ->
 
     regions = MAPS[name].regions
 
-    jenks_breaks = ss.jenks(pmt_info_entries.map((d) -> +d.value[name]), 5)
+    jenks_breaks = ss.jenks(pmt_info_entries.map((d) -> +d.value[name]), 4)
 
+    console.log "breaks", jenks_breaks.length, jenks_breaks
 
     #TODO: check threshold.range() documentation regarding N
     # https://github.com/mbostock/d3/wiki/Quantitative-Scales#wiki-threshold_range
@@ -225,11 +226,15 @@ create_legend_svg = (dom_id) ->
         .style('height', h)
 
     #TODO: build all the rectangles here
-    svg.append("rect")
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', 25)
-        .attr('height', 25)
+    for i in [0..5]
+        cls = if i is 5 then 'empty' else "q#{Math.abs(i-5+1)}-5"
+        console.log i*25
+        svg.append("rect")
+            .attr('x', 0)
+            .attr('y', i * 25)
+            .attr('width', 25)
+            .attr('height', 25)
+            .attr('class', cls)
     
     return svg
 

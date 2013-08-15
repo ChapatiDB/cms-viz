@@ -103,7 +103,8 @@
     regions = MAPS[name].regions;
     jenks_breaks = ss.jenks(pmt_info_entries.map(function(d) {
       return +d.value[name];
-    }), 5);
+    }), 4);
+    console.log("breaks", jenks_breaks.length, jenks_breaks);
     thresholds = d3.scale.threshold().domain(jenks_breaks).range(d3.range(5).map(function(i) {
       return "q" + i + "-5";
     }));
@@ -171,11 +172,15 @@
   };
 
   create_legend_svg = function(dom_id) {
-    var h, svg, w;
+    var cls, h, i, svg, w, _i;
     w = LEGEND_SIZE[0];
     h = LEGEND_SIZE[1];
     svg = d3.select(dom_id).append('svg').style('width', w).style('height', h);
-    svg.append("rect").attr('x', 0).attr('y', 0).attr('width', 25).attr('height', 25);
+    for (i = _i = 0; _i <= 5; i = ++_i) {
+      cls = i === 5 ? 'empty' : "q" + (Math.abs(i - 5 + 1)) + "-5";
+      console.log(i * 25);
+      svg.append("rect").attr('x', 0).attr('y', i * 25).attr('width', 25).attr('height', 25).attr('class', cls);
+    }
     return svg;
   };
 
