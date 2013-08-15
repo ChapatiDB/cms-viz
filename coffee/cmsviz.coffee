@@ -1,33 +1,183 @@
 
-WIDTH = 400
-HEIGHT = 300
+#TODO: LEGENDS:
+# see http://www.dashingd3js.com/svg-basic-shapes-and-d3js
+# make 6 squares for each map in a separate svg within the same div
+# probably better to have vertically-aligned.
+# then update when the jenks breaks change
 
-projection = d3.geo.albersUsa()
-    .scale(500)
-    .translate([WIDTH / 2, HEIGHT / 2])
+# Make legend 300w x 150h
+# 6 divisions of 25px x 25px (plus text to the rigt)
 
-path = d3.geo.path().projection(projection)
-svg1 = d3.select("#map1").append("svg")
-    .style("width", WIDTH)
-    .style("height", HEIGHT)
+LEGEND_SIZE = [300, 150]
+LEGEND_BOX_SIZE = 25 # actually just do height/6
 
-svg2 = d3.select("#map2").append("svg")
-    .style("width", WIDTH)
-    .style("height", HEIGHT)
+MAPS = {
+    'chrg': {
+        size: [400, 300]
+        display: "Average Charge"
+        value_fmt: d3.format('$,.0f')
+        geo_path: null
+        svg: null
+        regions: null
+        centered: null
+        delay: 250
+        leg_svg: null
+    }
+    'pmt': {
+        size: [400, 300]
+        display: "Average Payment"
+        value_fmt: d3.format('$,.0f')
+        geo_path: null
+        svg: null
+        regions: null
+        centered: null
+        delay: 250
+        leg_svg: null
+    }
+    'reduct': {
+        size: [600, 400]
+        display: "Reduction"
+        value_fmt: (x) -> return d3.format('.0f')(x) + '%'
+        geo_path: null
+        svg: null
+        regions: null
+        centered: null
+        delay: 0
+        leg_svg: null
+    }
 
-svg3 = d3.select("#map3").append("svg")
-    .style("width", WIDTH)
-    .style("height", HEIGHT)
+}
 
-chrg_regions = null
-pmt_regions = null
-reduct_regions = null
+zoomMaps = (d) ->
+    d3.map(MAPS).forEach (name, m) ->
+        svg = m.svg
 
-centered = null
+        width = m.size[0]
+        height = m.size[1]
+        geo_path = m.geo_path
+
+        if d? and m.centered isnt d
+            centroid = geo_path.centroid(d)
+            x = centroid[0]
+            y = centroid[1]
+            k = 4
+            m.centered = d
+
+        else
+            x = width/2
+            y = height/2
+            k = 1
+            m.centered = null
 
 
+        svg.selectAll("g").selectAll("path")
+            .classed("active", m.centered and (d) -> 
+                if not m.centered then return false
 
-createMap = (name, svg, hrr) ->
+                if d is m.centered
+                    return true
+
+                if d.properties?.HRRNUM is m.centered.properties?.HRRNUM
+                    return true
+
+                return false
+            )
+
+        paths = svg.selectAll("g").selectAll("path")
+        transition = paths.transition()
+            .duration(750)
+            .attr("transform", "translate(#{width/2},#{height/2})scale(#{k})translate(#{-x},#{-y})")
+            .attr("stroke-width", 1.5/k+"px")
+            .delay(m.delay)
+
+    return
+
+
+fetchAndUpdateRegions = (type, code) ->
+    queue()
+        .defer(d3.json, "data/procs/#{type}_#{code}_hrr.json")
+        .await((err, pmt_info) ->
+            if err then alert "Sorry, an error has occurred"
+            updateRegions('chrg', pmt_info)
+            updateRegions('pmt', pmt_info)
+            updateRegions('reduct', pmt_info)
+        )
+    return
+
+
+updateLegend = (name, breaks) ->
+    console.log "update legend for #{name} with #{breaks}"
+
+    svg = MAPS[name].leg_svg
+
+    return
+
+updateRegions = (name, pmt_info) ->
+    #pmt_info is object of form {hrr_id: {chrg:, pmt:, reduct:}, ...}
+    pmt_info_entries = d3.entries(pmt_info)
+
+    regions = MAPS[name].regions
+
+    jenks_breaks = ss.jenks(pmt_info_entries.map((d) -> +d.value[name]), 5)
+
+
+    #TODO: check threshold.range() documentation regarding N
+    # https://github.com/mbostock/d3/wiki/Quantitative-Scales#wiki-threshold_range
+
+    thresholds = d3.scale.threshold()
+        .domain(jenks_breaks)
+        .range(d3.range(5).map((i) -> "q#{i}-5" ))
+
+    updateLegend(name, jenks_breaks)
+
+    regions.attr("class", (d) -> 
+        if d.properties?.HRRNUM? and pmt_info[d.properties.HRRNUM]?
+            return thresholds(pmt_info[d.properties.HRRNUM][name])
+        return "empty"
+    )
+
+    regions.selectAll("title")
+        .text((d) ->
+            if d?.properties?
+                txt = "HRR for #{d.properties.HRRCITY}"
+
+                value_fmt = MAPS[name].value_fmt
+                display_name = MAPS[name].display
+
+                if pmt_info[d.properties.HRRNUM]?
+                    n = value_fmt(pmt_info[d.properties.HRRNUM][name])
+                    txt += "\n#{display_name}: #{n}"
+
+                return txt
+
+            return null
+        )
+
+    if MAPS[name].centered?
+        d3.map(MAPS).forEach (n, m) ->
+            m.svg.selectAll("g").selectAll("path")
+                .classed("active", (d) ->
+                    if d.properties?.HRRNUM is m.centered.properties?.HRRNUM
+                        return true
+                    return false
+                )
+
+    return
+
+
+createMap = (name, hrr) ->
+
+    width = MAPS[name].size[0]
+    height = MAPS[name].size[1]
+
+    projection = d3.geo.albersUsa()
+        .scale(width+100)
+        .translate([width / 2, height / 2])
+
+    MAPS[name].geo_path = d3.geo.path().projection(projection)
+
+    geo_path = MAPS[name].geo_path
+    svg = MAPS[name].svg
 
     region_feats = topojson.feature(hrr, hrr.objects.HRR_Bdry).features
 
@@ -37,129 +187,124 @@ createMap = (name, svg, hrr) ->
                 .data(region_feats)
                 .enter()
                     .append("path")
-                    .attr("d", path)
-                    .on("click", zoomToRegions)
+                        .attr("d", geo_path)
+                        .on("click", zoomMaps)
+
+    regions.append("title")
+        .text((d) ->
+            if d?.properties?
+                return "HRR for #{d.properties.HRRCITY}"
+            return null
+        )
 
     svg.append("g")
         .append("path")
             .datum(topojson.mesh(hrr, hrr.objects.HRR_Bdry))
-            .attr("d", path)
+            .attr("d", geo_path)
             .attr("class", "region_bdry")
 
     return regions
 
-fetchAndUpdateRegions = (type, code) ->
-    queue()
-        .defer(d3.json, "data/procs/#{type}_#{code}_hrr.json")
-        .await((err, pmt_info) ->
-            
-            updateRegions('chrg', chrg_regions, pmt_info)
-            updateRegions('pmt', pmt_regions, pmt_info)
-            updateRegions('reduct', reduct_regions, pmt_info)
-        )
-    return
+create_map_svg = (name, dom_id) ->
+    
+    w = MAPS[name].size[0]
+    h = MAPS[name].size[1]
+    
+    svg = d3.select(dom_id).append('svg')
+        .style('width', w)
+        .style('height', h )
 
-updateRegions = (name, regions, pmt_info) ->
-    #pmt_info is object of form {hrr_id: {chrg:, pmt:, reduct:}, ...}
-    pmt_info_entries = d3.entries(pmt_info)
+    return svg
 
-    jenks_breaks = d3.scale.threshold()
-        .domain(ss.jenks(pmt_info_entries.map((d) -> +d.value[name]), 5))
-        .range(d3.range(5).map((i) -> "q#{i}-5" ))
+create_legend_svg = (dom_id) ->
+    w = LEGEND_SIZE[0]
+    h = LEGEND_SIZE[1]
 
-    regions.attr("class", (d) -> 
-        if d.properties?.HRRNUM? and pmt_info[d.properties.HRRNUM]?
-            return jenks_breaks(pmt_info[d.properties.HRRNUM][name])
-        return "empty"
-    )
+    svg = d3.select(dom_id).append('svg')
+        .style('width', w)
+        .style('height', h)
 
-    #need to update selected region with "active" class
-    if centered?
-        for svg in [svg1, svg2, svg3]
-            svg.selectAll("g").selectAll("path")
-                .classed("active", (d) ->
-                    if d.properties?.HRRNUM is centered.properties?.HRRNUM
-                        return true
-                    return false
-                )
-
-    return
-
-zoomToRegions = (d) ->
-    if d? and centered isnt d
-        centroid = path.centroid(d)
-        x = centroid[0]
-        y = centroid[1]
-        k = 4
-        centered = d
-
-    else
-        x = WIDTH/2
-        y = HEIGHT/2
-        k = 1
-        centered = null
-
-
-    moveMap = (svg, delay=0) ->
-        svg.selectAll("g").selectAll("path")
-            .classed("active", centered and (d) -> 
-                if not centered then return false
-
-                if d is centered
-                    return true
-
-                if d.properties?.HRRNUM is centered.properties?.HRRNUM
-                    return true
-
-                return false
-            )
-
-        paths = svg.selectAll("g").selectAll("path")
-        transition = paths.transition()
-            .duration(750)
-            .attr("transform", "translate(#{WIDTH/2},#{HEIGHT/2})scale(#{k})translate(#{-x},#{-y})")
-            .attr("stroke-width", 1.5/k+"px")
-            .delay(delay)
-
-        return transition
-
-    moveMap(svg1)
-    moveMap(svg2, 250)
-    moveMap(svg3, 500)
-    return
-
-
+    #TODO: build all the rectangles here
+    svg.append("rect")
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 25)
+        .attr('height', 25)
+    
+    return svg
 
 ready = (error, hrr) ->
-
-    #TODO: Rewrite so that the maps are first created with the regions
-    # and colored all gray
 
     #Then have a method that uses the new data to change the colors.
     #The current operation is that the maps are completely recreated each time,
     # so we don't get any animation.
 
-    chrg_regions = createMap('chrg', svg1, hrr)
-    pmt_regions = createMap('pmt', svg2, hrr)
-    reduct_regions = createMap('reduct', svg3, hrr)   
+    MAPS.chrg.svg = create_map_svg('chrg', '#chrg_map')
+    MAPS.pmt.svg = create_map_svg('pmt', '#pmt_map')
+    MAPS.reduct.svg = create_map_svg('reduct', '#reduct_map')
 
-    d3.select('#selectDrg').on("change", () ->
+    MAPS.chrg.leg_svg = create_legend_svg('#chrgLegend')
+    MAPS.pmt.leg_svg = create_legend_svg('#pmtLegend')
+    MAPS.reduct.leg_svg = create_legend_svg('#reductLegend')
+
+    MAPS.chrg.regions = createMap('chrg', hrr)
+    MAPS.pmt.regions = createMap('pmt', hrr)
+    MAPS.reduct.regions = createMap('reduct', hrr)   
+
+
+    $selectDrg = d3.select('#selectDrg')
+    $selectDrgGroup = d3.select('#selectDrgGroup')
+    $selectApc = d3.select('#selectApc')
+    $selectApcGroup = d3.select('#selectApcGroup')
+
+    $inpatientBtn = d3.select('#inpatientBtn')
+    $outpatientBtn = d3.select('#outpatientBtn')
+
+    $selectDrg.on("change", () ->
         drg_code = this.options[this.selectedIndex].value
         fetchAndUpdateRegions("drg", drg_code)
         return
     )
 
-    d3.select('#selectApc').on("change", () ->
+    $selectApc.on("change", () ->
         apc_code = this.options[this.selectedIndex].value
         fetchAndUpdateRegions("apc", apc_code)
         return
     )
 
-    fetchAndUpdateRegions("drg", 39)
+
+
+    $inpatientBtn.on("click", () ->
+        if $inpatientBtn.classed('pure-button-active') then return
+
+        $outpatientBtn.classed('pure-button-active', false)
+        $inpatientBtn.classed('pure-button-active', true)
+
+        $selectDrgGroup.classed('hidden', false)
+        $selectApcGroup.classed('hidden', true)
+
+        $selectDrg.node().selectedIndex = 0
+        fetchAndUpdateRegions("drg", $selectDrg.node().options[0].value)
+        #$selectDrg.selectedIndex = 0
+    )
+
+    $outpatientBtn.on("click", () ->
+        if $outpatientBtn.classed('pure-button-active') then return
+
+        $inpatientBtn.classed('pure-button-active', false)
+        $outpatientBtn.classed('pure-button-active', true)
+
+        $selectApcGroup.classed('hidden', false)
+        $selectDrgGroup.classed('hidden', true)
+
+        $selectApc.node().selectedIndex = 0
+        fetchAndUpdateRegions("apc", $selectApc.node().options[0].value)
+    )
+
+    fetchAndUpdateRegions("drg", $selectDrg.node().options[0].value)
     
 
     return
-
 
 
 queue()

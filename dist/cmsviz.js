@@ -1,130 +1,234 @@
 (function() {
-  var HEIGHT, WIDTH, centered, chrg_regions, createMap, fetchAndUpdateRegions, path, pmt_regions, projection, ready, reduct_regions, svg1, svg2, svg3, updateRegions, zoomToRegions;
+  var LEGEND_BOX_SIZE, LEGEND_SIZE, MAPS, createMap, create_legend_svg, create_map_svg, fetchAndUpdateRegions, ready, updateLegend, updateRegions, zoomMaps;
 
-  WIDTH = 400;
+  LEGEND_SIZE = [300, 150];
 
-  HEIGHT = 300;
+  LEGEND_BOX_SIZE = 25;
 
-  projection = d3.geo.albersUsa().scale(500).translate([WIDTH / 2, HEIGHT / 2]);
-
-  path = d3.geo.path().projection(projection);
-
-  svg1 = d3.select("#map1").append("svg").style("width", WIDTH).style("height", HEIGHT);
-
-  svg2 = d3.select("#map2").append("svg").style("width", WIDTH).style("height", HEIGHT);
-
-  svg3 = d3.select("#map3").append("svg").style("width", WIDTH).style("height", HEIGHT);
-
-  chrg_regions = null;
-
-  pmt_regions = null;
-
-  reduct_regions = null;
-
-  centered = null;
-
-  createMap = function(name, svg, hrr) {
-    var region_feats, regions;
-    region_feats = topojson.feature(hrr, hrr.objects.HRR_Bdry).features;
-    regions = svg.append("g").attr("class", "region hrr_" + name).selectAll("path").data(region_feats).enter().append("path").attr("d", path).on("click", zoomToRegions);
-    svg.append("g").append("path").datum(topojson.mesh(hrr, hrr.objects.HRR_Bdry)).attr("d", path).attr("class", "region_bdry");
-    return regions;
-  };
-
-  fetchAndUpdateRegions = function(type, code) {
-    queue().defer(d3.json, "data/procs/" + type + "_" + code + "_hrr.json").await(function(err, pmt_info) {
-      updateRegions('chrg', chrg_regions, pmt_info);
-      updateRegions('pmt', pmt_regions, pmt_info);
-      return updateRegions('reduct', reduct_regions, pmt_info);
-    });
-  };
-
-  updateRegions = function(name, regions, pmt_info) {
-    var jenks_breaks, pmt_info_entries, svg, _i, _len, _ref;
-    pmt_info_entries = d3.entries(pmt_info);
-    jenks_breaks = d3.scale.threshold().domain(ss.jenks(pmt_info_entries.map(function(d) {
-      return +d.value[name];
-    }), 5)).range(d3.range(5).map(function(i) {
-      return "q" + i + "-5";
-    }));
-    regions.attr("class", function(d) {
-      var _ref;
-      if ((((_ref = d.properties) != null ? _ref.HRRNUM : void 0) != null) && (pmt_info[d.properties.HRRNUM] != null)) {
-        return jenks_breaks(pmt_info[d.properties.HRRNUM][name]);
-      }
-      return "empty";
-    });
-    if (centered != null) {
-      _ref = [svg1, svg2, svg3];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        svg = _ref[_i];
-        svg.selectAll("g").selectAll("path").classed("active", function(d) {
-          var _ref1, _ref2;
-          if (((_ref1 = d.properties) != null ? _ref1.HRRNUM : void 0) === ((_ref2 = centered.properties) != null ? _ref2.HRRNUM : void 0)) {
-            return true;
-          }
-          return false;
-        });
-      }
+  MAPS = {
+    'chrg': {
+      size: [400, 300],
+      display: "Average Charge",
+      value_fmt: d3.format('$,.0f'),
+      geo_path: null,
+      svg: null,
+      regions: null,
+      centered: null,
+      delay: 250,
+      leg_svg: null
+    },
+    'pmt': {
+      size: [400, 300],
+      display: "Average Payment",
+      value_fmt: d3.format('$,.0f'),
+      geo_path: null,
+      svg: null,
+      regions: null,
+      centered: null,
+      delay: 250,
+      leg_svg: null
+    },
+    'reduct': {
+      size: [600, 400],
+      display: "Reduction",
+      value_fmt: function(x) {
+        return d3.format('.0f')(x) + '%';
+      },
+      geo_path: null,
+      svg: null,
+      regions: null,
+      centered: null,
+      delay: 0,
+      leg_svg: null
     }
   };
 
-  zoomToRegions = function(d) {
-    var centroid, k, moveMap, x, y;
-    if ((d != null) && centered !== d) {
-      centroid = path.centroid(d);
-      x = centroid[0];
-      y = centroid[1];
-      k = 4;
-      centered = d;
-    } else {
-      x = WIDTH / 2;
-      y = HEIGHT / 2;
-      k = 1;
-      centered = null;
-    }
-    moveMap = function(svg, delay) {
-      var paths, transition;
-      if (delay == null) {
-        delay = 0;
+  zoomMaps = function(d) {
+    d3.map(MAPS).forEach(function(name, m) {
+      var centroid, geo_path, height, k, paths, svg, transition, width, x, y;
+      svg = m.svg;
+      width = m.size[0];
+      height = m.size[1];
+      geo_path = m.geo_path;
+      if ((d != null) && m.centered !== d) {
+        centroid = geo_path.centroid(d);
+        x = centroid[0];
+        y = centroid[1];
+        k = 4;
+        m.centered = d;
+      } else {
+        x = width / 2;
+        y = height / 2;
+        k = 1;
+        m.centered = null;
       }
-      svg.selectAll("g").selectAll("path").classed("active", centered && function(d) {
+      svg.selectAll("g").selectAll("path").classed("active", m.centered && function(d) {
         var _ref, _ref1;
-        if (!centered) {
+        if (!m.centered) {
           return false;
         }
-        if (d === centered) {
+        if (d === m.centered) {
           return true;
         }
-        if (((_ref = d.properties) != null ? _ref.HRRNUM : void 0) === ((_ref1 = centered.properties) != null ? _ref1.HRRNUM : void 0)) {
+        if (((_ref = d.properties) != null ? _ref.HRRNUM : void 0) === ((_ref1 = m.centered.properties) != null ? _ref1.HRRNUM : void 0)) {
           return true;
         }
         return false;
       });
       paths = svg.selectAll("g").selectAll("path");
-      transition = paths.transition().duration(750).attr("transform", "translate(" + (WIDTH / 2) + "," + (HEIGHT / 2) + ")scale(" + k + ")translate(" + (-x) + "," + (-y) + ")").attr("stroke-width", 1.5 / k + "px").delay(delay);
-      return transition;
-    };
-    moveMap(svg1);
-    moveMap(svg2, 250);
-    moveMap(svg3, 500);
+      return transition = paths.transition().duration(750).attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")scale(" + k + ")translate(" + (-x) + "," + (-y) + ")").attr("stroke-width", 1.5 / k + "px").delay(m.delay);
+    });
+  };
+
+  fetchAndUpdateRegions = function(type, code) {
+    queue().defer(d3.json, "data/procs/" + type + "_" + code + "_hrr.json").await(function(err, pmt_info) {
+      if (err) {
+        alert("Sorry, an error has occurred");
+      }
+      updateRegions('chrg', pmt_info);
+      updateRegions('pmt', pmt_info);
+      return updateRegions('reduct', pmt_info);
+    });
+  };
+
+  updateLegend = function(name, breaks) {
+    var svg;
+    console.log("update legend for " + name + " with " + breaks);
+    svg = MAPS[name].leg_svg;
+  };
+
+  updateRegions = function(name, pmt_info) {
+    var jenks_breaks, pmt_info_entries, regions, thresholds;
+    pmt_info_entries = d3.entries(pmt_info);
+    regions = MAPS[name].regions;
+    jenks_breaks = ss.jenks(pmt_info_entries.map(function(d) {
+      return +d.value[name];
+    }), 5);
+    thresholds = d3.scale.threshold().domain(jenks_breaks).range(d3.range(5).map(function(i) {
+      return "q" + i + "-5";
+    }));
+    updateLegend(name, jenks_breaks);
+    regions.attr("class", function(d) {
+      var _ref;
+      if ((((_ref = d.properties) != null ? _ref.HRRNUM : void 0) != null) && (pmt_info[d.properties.HRRNUM] != null)) {
+        return thresholds(pmt_info[d.properties.HRRNUM][name]);
+      }
+      return "empty";
+    });
+    regions.selectAll("title").text(function(d) {
+      var display_name, n, txt, value_fmt;
+      if ((d != null ? d.properties : void 0) != null) {
+        txt = "HRR for " + d.properties.HRRCITY;
+        value_fmt = MAPS[name].value_fmt;
+        display_name = MAPS[name].display;
+        if (pmt_info[d.properties.HRRNUM] != null) {
+          n = value_fmt(pmt_info[d.properties.HRRNUM][name]);
+          txt += "\n" + display_name + ": " + n;
+        }
+        return txt;
+      }
+      return null;
+    });
+    if (MAPS[name].centered != null) {
+      d3.map(MAPS).forEach(function(n, m) {
+        return m.svg.selectAll("g").selectAll("path").classed("active", function(d) {
+          var _ref, _ref1;
+          if (((_ref = d.properties) != null ? _ref.HRRNUM : void 0) === ((_ref1 = m.centered.properties) != null ? _ref1.HRRNUM : void 0)) {
+            return true;
+          }
+          return false;
+        });
+      });
+    }
+  };
+
+  createMap = function(name, hrr) {
+    var geo_path, height, projection, region_feats, regions, svg, width;
+    width = MAPS[name].size[0];
+    height = MAPS[name].size[1];
+    projection = d3.geo.albersUsa().scale(width + 100).translate([width / 2, height / 2]);
+    MAPS[name].geo_path = d3.geo.path().projection(projection);
+    geo_path = MAPS[name].geo_path;
+    svg = MAPS[name].svg;
+    region_feats = topojson.feature(hrr, hrr.objects.HRR_Bdry).features;
+    regions = svg.append("g").attr("class", "region hrr_" + name).selectAll("path").data(region_feats).enter().append("path").attr("d", geo_path).on("click", zoomMaps);
+    regions.append("title").text(function(d) {
+      if ((d != null ? d.properties : void 0) != null) {
+        return "HRR for " + d.properties.HRRCITY;
+      }
+      return null;
+    });
+    svg.append("g").append("path").datum(topojson.mesh(hrr, hrr.objects.HRR_Bdry)).attr("d", geo_path).attr("class", "region_bdry");
+    return regions;
+  };
+
+  create_map_svg = function(name, dom_id) {
+    var h, svg, w;
+    w = MAPS[name].size[0];
+    h = MAPS[name].size[1];
+    svg = d3.select(dom_id).append('svg').style('width', w).style('height', h);
+    return svg;
+  };
+
+  create_legend_svg = function(dom_id) {
+    var h, svg, w;
+    w = LEGEND_SIZE[0];
+    h = LEGEND_SIZE[1];
+    svg = d3.select(dom_id).append('svg').style('width', w).style('height', h);
+    svg.append("rect").attr('x', 0).attr('y', 0).attr('width', 25).attr('height', 25);
+    return svg;
   };
 
   ready = function(error, hrr) {
-    chrg_regions = createMap('chrg', svg1, hrr);
-    pmt_regions = createMap('pmt', svg2, hrr);
-    reduct_regions = createMap('reduct', svg3, hrr);
-    d3.select('#selectDrg').on("change", function() {
+    var $inpatientBtn, $outpatientBtn, $selectApc, $selectApcGroup, $selectDrg, $selectDrgGroup;
+    MAPS.chrg.svg = create_map_svg('chrg', '#chrg_map');
+    MAPS.pmt.svg = create_map_svg('pmt', '#pmt_map');
+    MAPS.reduct.svg = create_map_svg('reduct', '#reduct_map');
+    MAPS.chrg.leg_svg = create_legend_svg('#chrgLegend');
+    MAPS.pmt.leg_svg = create_legend_svg('#pmtLegend');
+    MAPS.reduct.leg_svg = create_legend_svg('#reductLegend');
+    MAPS.chrg.regions = createMap('chrg', hrr);
+    MAPS.pmt.regions = createMap('pmt', hrr);
+    MAPS.reduct.regions = createMap('reduct', hrr);
+    $selectDrg = d3.select('#selectDrg');
+    $selectDrgGroup = d3.select('#selectDrgGroup');
+    $selectApc = d3.select('#selectApc');
+    $selectApcGroup = d3.select('#selectApcGroup');
+    $inpatientBtn = d3.select('#inpatientBtn');
+    $outpatientBtn = d3.select('#outpatientBtn');
+    $selectDrg.on("change", function() {
       var drg_code;
       drg_code = this.options[this.selectedIndex].value;
       fetchAndUpdateRegions("drg", drg_code);
     });
-    d3.select('#selectApc').on("change", function() {
+    $selectApc.on("change", function() {
       var apc_code;
       apc_code = this.options[this.selectedIndex].value;
       fetchAndUpdateRegions("apc", apc_code);
     });
-    fetchAndUpdateRegions("drg", 39);
+    $inpatientBtn.on("click", function() {
+      if ($inpatientBtn.classed('pure-button-active')) {
+        return;
+      }
+      $outpatientBtn.classed('pure-button-active', false);
+      $inpatientBtn.classed('pure-button-active', true);
+      $selectDrgGroup.classed('hidden', false);
+      $selectApcGroup.classed('hidden', true);
+      $selectDrg.node().selectedIndex = 0;
+      return fetchAndUpdateRegions("drg", $selectDrg.node().options[0].value);
+    });
+    $outpatientBtn.on("click", function() {
+      if ($outpatientBtn.classed('pure-button-active')) {
+        return;
+      }
+      $inpatientBtn.classed('pure-button-active', false);
+      $outpatientBtn.classed('pure-button-active', true);
+      $selectApcGroup.classed('hidden', false);
+      $selectDrgGroup.classed('hidden', true);
+      $selectApc.node().selectedIndex = 0;
+      return fetchAndUpdateRegions("apc", $selectApc.node().options[0].value);
+    });
+    fetchAndUpdateRegions("drg", $selectDrg.node().options[0].value);
   };
 
   queue().defer(d3.json, "data/hrr_sp007.topojson").await(ready);

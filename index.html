@@ -12,168 +12,198 @@
 
     <body class="pure-skin-cmsviz">
         
-        <div class="pure-g-r">
+        <div class="pure-g">
             <div class="pure-u-1 centered">
-                <p>Hi James</p>
-                <div class="pure-form pure-form-stacked">
-                    <label for="selectDrg">
-                        Select Outpatient Service (by DRG code)
-                    </label>
-                    <select id="selectDrg">
-                        <option value='39'>39 - EXTRACRANIAL PROCEDURES W/O CC/MCC</option>
-                        <option value='57'>57 - DEGENERATIVE NERVOUS SYSTEM DISORDERS W/O MCC</option>
-                        <option value='64'>64 - INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W MCC</option>
-                        <option value='65'>65 - INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W CC</option>
-                        <option value='66'>66 - INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W/O CC/MCC</option>
-                        <option value='69'>69 - TRANSIENT ISCHEMIA</option>
-                        <option value='74'>74 - CRANIAL &amp; PERIPHERAL NERVE DISORDERS W/O MCC</option>
-                        <option value='101'>101 - SEIZURES W/O MCC</option>
-                        <option value='149'>149 - DYSEQUILIBRIUM</option>
-                        <option value='176'>176 - PULMONARY EMBOLISM W/O MCC</option>
-                        <option value='177'>177 - RESPIRATORY INFECTIONS &amp; INFLAMMATIONS W MCC</option>
-                        <option value='178'>178 - RESPIRATORY INFECTIONS &amp; INFLAMMATIONS W CC</option>
-                        <option value='189'>189 - PULMONARY EDEMA &amp; RESPIRATORY FAILURE</option>
-                        <option value='190'>190 - CHRONIC OBSTRUCTIVE PULMONARY DISEASE W MCC</option>
-                        <option value='191'>191 - CHRONIC OBSTRUCTIVE PULMONARY DISEASE W CC</option>
-                        <option value='192'>192 - CHRONIC OBSTRUCTIVE PULMONARY DISEASE W/O CC/MCC</option>
-                        <option value='193'>193 - SIMPLE PNEUMONIA &amp; PLEURISY W MCC</option>
-                        <option value='194'>194 - SIMPLE PNEUMONIA &amp; PLEURISY W CC</option>
-                        <option value='195'>195 - SIMPLE PNEUMONIA &amp; PLEURISY W/O CC/MCC</option>
-                        <option value='202'>202 - BRONCHITIS &amp; ASTHMA W CC/MCC</option>
-                        <option value='203'>203 - BRONCHITIS &amp; ASTHMA W/O CC/MCC</option>
-                        <option value='207'>207 - RESPIRATORY SYSTEM DIAGNOSIS W VENTILATOR SUPPORT 96+ HOURS</option>
-                        <option value='208'>208 - RESPIRATORY SYSTEM DIAGNOSIS W VENTILATOR SUPPORT &amp;lt;96 HOURS</option>
-                        <option value='238'>238 - MAJOR CARDIOVASC PROCEDURES W/O MCC</option>
-                        <option value='243'>243 - PERMANENT CARDIAC PACEMAKER IMPLANT W CC</option>
-                        <option value='244'>244 - PERMANENT CARDIAC PACEMAKER IMPLANT W/O CC/MCC</option>
-                        <option value='246'>246 - PERC CARDIOVASC PROC W DRUG-ELUTING STENT W MCC OR 4+ VESSELS/STENTS</option>
-                        <option value='247'>247 - PERC CARDIOVASC PROC W DRUG-ELUTING STENT W/O MCC</option>
-                        <option value='249'>249 - PERC CARDIOVASC PROC W NON-DRUG-ELUTING STENT W/O MCC</option>
-                        <option value='251'>251 - PERC CARDIOVASC PROC W/O CORONARY ARTERY STENT W/O MCC</option>
-                        <option value='252'>252 - OTHER VASCULAR PROCEDURES W MCC</option>
-                        <option value='253'>253 - OTHER VASCULAR PROCEDURES W CC</option>
-                        <option value='254'>254 - OTHER VASCULAR PROCEDURES W/O CC/MCC</option>
-                        <option value='280'>280 - ACUTE MYOCARDIAL INFARCTION, DISCHARGED ALIVE W MCC</option>
-                        <option value='281'>281 - ACUTE MYOCARDIAL INFARCTION, DISCHARGED ALIVE W CC</option>
-                        <option value='282'>282 - ACUTE MYOCARDIAL INFARCTION, DISCHARGED ALIVE W/O CC/MCC</option>
-                        <option value='286'>286 - CIRCULATORY DISORDERS EXCEPT AMI, W CARD CATH W MCC</option>
-                        <option value='287'>287 - CIRCULATORY DISORDERS EXCEPT AMI, W CARD CATH W/O MCC</option>
-                        <option value='291'>291 - HEART FAILURE &amp; SHOCK W MCC</option>
-                        <option value='292'>292 - HEART FAILURE &amp; SHOCK W CC</option>
-                        <option value='293'>293 - HEART FAILURE &amp; SHOCK W/O CC/MCC</option>
-                        <option value='300'>300 - PERIPHERAL VASCULAR DISORDERS W CC</option>
-                        <option value='301'>301 - PERIPHERAL VASCULAR DISORDERS W/O CC/MCC</option>
-                        <option value='303'>303 - ATHEROSCLEROSIS W/O MCC</option>
-                        <option value='305'>305 - HYPERTENSION W/O MCC</option>
-                        <option value='308'>308 - CARDIAC ARRHYTHMIA &amp; CONDUCTION DISORDERS W MCC</option>
-                        <option value='309'>309 - CARDIAC ARRHYTHMIA &amp; CONDUCTION DISORDERS W CC</option>
-                        <option value='310'>310 - CARDIAC ARRHYTHMIA &amp; CONDUCTION DISORDERS W/O CC/MCC</option>
-                        <option value='312'>312 - SYNCOPE &amp; COLLAPSE</option>
-                        <option value='313'>313 - CHEST PAIN</option>
-                        <option value='314'>314 - OTHER CIRCULATORY SYSTEM DIAGNOSES W MCC</option>
-                        <option value='315'>315 - OTHER CIRCULATORY SYSTEM DIAGNOSES W CC</option>
-                        <option value='329'>329 - MAJOR SMALL &amp; LARGE BOWEL PROCEDURES W MCC</option>
-                        <option value='330'>330 - MAJOR SMALL &amp; LARGE BOWEL PROCEDURES W CC</option>
-                        <option value='372'>372 - MAJOR GASTROINTESTINAL DISORDERS &amp; PERITONEAL INFECTIONS W CC</option>
-                        <option value='377'>377 - G.I. HEMORRHAGE W MCC</option>
-                        <option value='378'>378 - G.I. HEMORRHAGE W CC</option>
-                        <option value='379'>379 - G.I. HEMORRHAGE W/O CC/MCC</option>
-                        <option value='389'>389 - G.I. OBSTRUCTION W CC</option>
-                        <option value='390'>390 - G.I. OBSTRUCTION W/O CC/MCC</option>
-                        <option value='391'>391 - ESOPHAGITIS, GASTROENT &amp; MISC DIGEST DISORDERS W MCC</option>
-                        <option value='392'>392 - ESOPHAGITIS, GASTROENT &amp; MISC DIGEST DISORDERS W/O MCC</option>
-                        <option value='394'>394 - OTHER DIGESTIVE SYSTEM DIAGNOSES W CC</option>
-                        <option value='418'>418 - LAPAROSCOPIC CHOLECYSTECTOMY W/O C.D.E. W CC</option>
-                        <option value='419'>419 - LAPAROSCOPIC CHOLECYSTECTOMY W/O C.D.E. W/O CC/MCC</option>
-                        <option value='439'>439 - DISORDERS OF PANCREAS EXCEPT MALIGNANCY W CC</option>
-                        <option value='460'>460 - SPINAL FUSION EXCEPT CERVICAL W/O MCC</option>
-                        <option value='469'>469 - MAJOR JOINT REPLACEMENT OR REATTACHMENT OF LOWER EXTREMITY W MCC</option>
-                        <option value='470'>470 - MAJOR JOINT REPLACEMENT OR REATTACHMENT OF LOWER EXTREMITY W/O MCC</option>
-                        <option value='473'>473 - CERVICAL SPINAL FUSION W/O CC/MCC</option>
-                        <option value='480'>480 - HIP &amp; FEMUR PROCEDURES EXCEPT MAJOR JOINT W MCC</option>
-                        <option value='481'>481 - HIP &amp; FEMUR PROCEDURES EXCEPT MAJOR JOINT W CC</option>
-                        <option value='482'>482 - HIP &amp; FEMUR PROCEDURES EXCEPT MAJOR JOINT W/O CC/MCC</option>
-                        <option value='491'>491 - BACK &amp; NECK PROC EXC SPINAL FUSION W/O CC/MCC</option>
-                        <option value='536'>536 - FRACTURES OF HIP &amp; PELVIS W/O MCC</option>
-                        <option value='552'>552 - MEDICAL BACK PROBLEMS W/O MCC</option>
-                        <option value='563'>563 - FX, SPRN, STRN &amp; DISL EXCEPT FEMUR, HIP, PELVIS &amp; THIGH W/O MCC</option>
-                        <option value='602'>602 - CELLULITIS W MCC</option>
-                        <option value='603'>603 - CELLULITIS W/O MCC</option>
-                        <option value='638'>638 - DIABETES W CC</option>
-                        <option value='640'>640 - MISC DISORDERS OF NUTRITION,METABOLISM,FLUIDS/ELECTROLYTES W MCC</option>
-                        <option value='641'>641 - MISC DISORDERS OF NUTRITION,METABOLISM,FLUIDS/ELECTROLYTES W/O MCC</option>
-                        <option value='682'>682 - RENAL FAILURE W MCC</option>
-                        <option value='683'>683 - RENAL FAILURE W CC</option>
-                        <option value='684'>684 - RENAL FAILURE W/O CC/MCC</option>
-                        <option value='689'>689 - KIDNEY &amp; URINARY TRACT INFECTIONS W MCC</option>
-                        <option value='690'>690 - KIDNEY &amp; URINARY TRACT INFECTIONS W/O MCC</option>
-                        <option value='698'>698 - OTHER KIDNEY &amp; URINARY TRACT DIAGNOSES W MCC</option>
-                        <option value='699'>699 - OTHER KIDNEY &amp; URINARY TRACT DIAGNOSES W CC</option>
-                        <option value='811'>811 - RED BLOOD CELL DISORDERS W MCC</option>
-                        <option value='812'>812 - RED BLOOD CELL DISORDERS W/O MCC</option>
-                        <option value='853'>853 - INFECTIOUS &amp; PARASITIC DISEASES W O.R. PROCEDURE W MCC</option>
-                        <option value='870'>870 - SEPTICEMIA OR SEVERE SEPSIS W MV 96+ HOURS</option>
-                        <option value='871'>871 - SEPTICEMIA OR SEVERE SEPSIS W/O MV 96+ HOURS W MCC</option>
-                        <option value='872'>872 - SEPTICEMIA OR SEVERE SEPSIS W/O MV 96+ HOURS W/O MCC</option>
-                        <option value='885'>885 - PSYCHOSES</option>
-                        <option value='897'>897 - ALCOHOL/DRUG ABUSE OR DEPENDENCE W/O REHABILITATION THERAPY W/O MCC</option>
-                        <option value='917'>917 - POISONING &amp; TOXIC EFFECTS OF DRUGS W MCC</option>
-                        <option value='918'>918 - POISONING &amp; TOXIC EFFECTS OF DRUGS W/O MCC</option>
-                        <option value='948'>948 - SIGNS &amp; SYMPTOMS W/O MCC</option>
-                    </select>
+                <h1>Hi James</h1>
+                <button id="inpatientBtn" class="pure-button pure-button-active">Inpatient</button>
+                <button id="outpatientBtn" class="pure-button">Outpatient</button>
+                <form class="pure-form pure-form-stacked">
+                    <div id="selectDrgGroup">
+                        <label for="selectDrg">
+                            Select Inpatient Service (by DRG code)
+                        </label>
+                        <select id="selectDrg">
+                            <option value='39'>39 - EXTRACRANIAL PROCEDURES W/O CC/MCC</option>
+                            <option value='57'>57 - DEGENERATIVE NERVOUS SYSTEM DISORDERS W/O MCC</option>
+                            <option value='64'>64 - INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W MCC</option>
+                            <option value='65'>65 - INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W CC</option>
+                            <option value='66'>66 - INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W/O CC/MCC</option>
+                            <option value='69'>69 - TRANSIENT ISCHEMIA</option>
+                            <option value='74'>74 - CRANIAL &amp; PERIPHERAL NERVE DISORDERS W/O MCC</option>
+                            <option value='101'>101 - SEIZURES W/O MCC</option>
+                            <option value='149'>149 - DYSEQUILIBRIUM</option>
+                            <option value='176'>176 - PULMONARY EMBOLISM W/O MCC</option>
+                            <option value='177'>177 - RESPIRATORY INFECTIONS &amp; INFLAMMATIONS W MCC</option>
+                            <option value='178'>178 - RESPIRATORY INFECTIONS &amp; INFLAMMATIONS W CC</option>
+                            <option value='189'>189 - PULMONARY EDEMA &amp; RESPIRATORY FAILURE</option>
+                            <option value='190'>190 - CHRONIC OBSTRUCTIVE PULMONARY DISEASE W MCC</option>
+                            <option value='191'>191 - CHRONIC OBSTRUCTIVE PULMONARY DISEASE W CC</option>
+                            <option value='192'>192 - CHRONIC OBSTRUCTIVE PULMONARY DISEASE W/O CC/MCC</option>
+                            <option value='193'>193 - SIMPLE PNEUMONIA &amp; PLEURISY W MCC</option>
+                            <option value='194'>194 - SIMPLE PNEUMONIA &amp; PLEURISY W CC</option>
+                            <option value='195'>195 - SIMPLE PNEUMONIA &amp; PLEURISY W/O CC/MCC</option>
+                            <option value='202'>202 - BRONCHITIS &amp; ASTHMA W CC/MCC</option>
+                            <option value='203'>203 - BRONCHITIS &amp; ASTHMA W/O CC/MCC</option>
+                            <option value='207'>207 - RESPIRATORY SYSTEM DIAGNOSIS W VENTILATOR SUPPORT 96+ HOURS</option>
+                            <option value='208'>208 - RESPIRATORY SYSTEM DIAGNOSIS W VENTILATOR SUPPORT &amp;lt;96 HOURS</option>
+                            <option value='238'>238 - MAJOR CARDIOVASC PROCEDURES W/O MCC</option>
+                            <option value='243'>243 - PERMANENT CARDIAC PACEMAKER IMPLANT W CC</option>
+                            <option value='244'>244 - PERMANENT CARDIAC PACEMAKER IMPLANT W/O CC/MCC</option>
+                            <option value='246'>246 - PERC CARDIOVASC PROC W DRUG-ELUTING STENT W MCC OR 4+ VESSELS/STENTS</option>
+                            <option value='247'>247 - PERC CARDIOVASC PROC W DRUG-ELUTING STENT W/O MCC</option>
+                            <option value='249'>249 - PERC CARDIOVASC PROC W NON-DRUG-ELUTING STENT W/O MCC</option>
+                            <option value='251'>251 - PERC CARDIOVASC PROC W/O CORONARY ARTERY STENT W/O MCC</option>
+                            <option value='252'>252 - OTHER VASCULAR PROCEDURES W MCC</option>
+                            <option value='253'>253 - OTHER VASCULAR PROCEDURES W CC</option>
+                            <option value='254'>254 - OTHER VASCULAR PROCEDURES W/O CC/MCC</option>
+                            <option value='280'>280 - ACUTE MYOCARDIAL INFARCTION, DISCHARGED ALIVE W MCC</option>
+                            <option value='281'>281 - ACUTE MYOCARDIAL INFARCTION, DISCHARGED ALIVE W CC</option>
+                            <option value='282'>282 - ACUTE MYOCARDIAL INFARCTION, DISCHARGED ALIVE W/O CC/MCC</option>
+                            <option value='286'>286 - CIRCULATORY DISORDERS EXCEPT AMI, W CARD CATH W MCC</option>
+                            <option value='287'>287 - CIRCULATORY DISORDERS EXCEPT AMI, W CARD CATH W/O MCC</option>
+                            <option value='291'>291 - HEART FAILURE &amp; SHOCK W MCC</option>
+                            <option value='292'>292 - HEART FAILURE &amp; SHOCK W CC</option>
+                            <option value='293'>293 - HEART FAILURE &amp; SHOCK W/O CC/MCC</option>
+                            <option value='300'>300 - PERIPHERAL VASCULAR DISORDERS W CC</option>
+                            <option value='301'>301 - PERIPHERAL VASCULAR DISORDERS W/O CC/MCC</option>
+                            <option value='303'>303 - ATHEROSCLEROSIS W/O MCC</option>
+                            <option value='305'>305 - HYPERTENSION W/O MCC</option>
+                            <option value='308'>308 - CARDIAC ARRHYTHMIA &amp; CONDUCTION DISORDERS W MCC</option>
+                            <option value='309'>309 - CARDIAC ARRHYTHMIA &amp; CONDUCTION DISORDERS W CC</option>
+                            <option value='310'>310 - CARDIAC ARRHYTHMIA &amp; CONDUCTION DISORDERS W/O CC/MCC</option>
+                            <option value='312'>312 - SYNCOPE &amp; COLLAPSE</option>
+                            <option value='313'>313 - CHEST PAIN</option>
+                            <option value='314'>314 - OTHER CIRCULATORY SYSTEM DIAGNOSES W MCC</option>
+                            <option value='315'>315 - OTHER CIRCULATORY SYSTEM DIAGNOSES W CC</option>
+                            <option value='329'>329 - MAJOR SMALL &amp; LARGE BOWEL PROCEDURES W MCC</option>
+                            <option value='330'>330 - MAJOR SMALL &amp; LARGE BOWEL PROCEDURES W CC</option>
+                            <option value='372'>372 - MAJOR GASTROINTESTINAL DISORDERS &amp; PERITONEAL INFECTIONS W CC</option>
+                            <option value='377'>377 - G.I. HEMORRHAGE W MCC</option>
+                            <option value='378'>378 - G.I. HEMORRHAGE W CC</option>
+                            <option value='379'>379 - G.I. HEMORRHAGE W/O CC/MCC</option>
+                            <option value='389'>389 - G.I. OBSTRUCTION W CC</option>
+                            <option value='390'>390 - G.I. OBSTRUCTION W/O CC/MCC</option>
+                            <option value='391'>391 - ESOPHAGITIS, GASTROENT &amp; MISC DIGEST DISORDERS W MCC</option>
+                            <option value='392'>392 - ESOPHAGITIS, GASTROENT &amp; MISC DIGEST DISORDERS W/O MCC</option>
+                            <option value='394'>394 - OTHER DIGESTIVE SYSTEM DIAGNOSES W CC</option>
+                            <option value='418'>418 - LAPAROSCOPIC CHOLECYSTECTOMY W/O C.D.E. W CC</option>
+                            <option value='419'>419 - LAPAROSCOPIC CHOLECYSTECTOMY W/O C.D.E. W/O CC/MCC</option>
+                            <option value='439'>439 - DISORDERS OF PANCREAS EXCEPT MALIGNANCY W CC</option>
+                            <option value='460'>460 - SPINAL FUSION EXCEPT CERVICAL W/O MCC</option>
+                            <option value='469'>469 - MAJOR JOINT REPLACEMENT OR REATTACHMENT OF LOWER EXTREMITY W MCC</option>
+                            <option value='470'>470 - MAJOR JOINT REPLACEMENT OR REATTACHMENT OF LOWER EXTREMITY W/O MCC</option>
+                            <option value='473'>473 - CERVICAL SPINAL FUSION W/O CC/MCC</option>
+                            <option value='480'>480 - HIP &amp; FEMUR PROCEDURES EXCEPT MAJOR JOINT W MCC</option>
+                            <option value='481'>481 - HIP &amp; FEMUR PROCEDURES EXCEPT MAJOR JOINT W CC</option>
+                            <option value='482'>482 - HIP &amp; FEMUR PROCEDURES EXCEPT MAJOR JOINT W/O CC/MCC</option>
+                            <option value='491'>491 - BACK &amp; NECK PROC EXC SPINAL FUSION W/O CC/MCC</option>
+                            <option value='536'>536 - FRACTURES OF HIP &amp; PELVIS W/O MCC</option>
+                            <option value='552'>552 - MEDICAL BACK PROBLEMS W/O MCC</option>
+                            <option value='563'>563 - FX, SPRN, STRN &amp; DISL EXCEPT FEMUR, HIP, PELVIS &amp; THIGH W/O MCC</option>
+                            <option value='602'>602 - CELLULITIS W MCC</option>
+                            <option value='603'>603 - CELLULITIS W/O MCC</option>
+                            <option value='638'>638 - DIABETES W CC</option>
+                            <option value='640'>640 - MISC DISORDERS OF NUTRITION,METABOLISM,FLUIDS/ELECTROLYTES W MCC</option>
+                            <option value='641'>641 - MISC DISORDERS OF NUTRITION,METABOLISM,FLUIDS/ELECTROLYTES W/O MCC</option>
+                            <option value='682'>682 - RENAL FAILURE W MCC</option>
+                            <option value='683'>683 - RENAL FAILURE W CC</option>
+                            <option value='684'>684 - RENAL FAILURE W/O CC/MCC</option>
+                            <option value='689'>689 - KIDNEY &amp; URINARY TRACT INFECTIONS W MCC</option>
+                            <option value='690'>690 - KIDNEY &amp; URINARY TRACT INFECTIONS W/O MCC</option>
+                            <option value='698'>698 - OTHER KIDNEY &amp; URINARY TRACT DIAGNOSES W MCC</option>
+                            <option value='699'>699 - OTHER KIDNEY &amp; URINARY TRACT DIAGNOSES W CC</option>
+                            <option value='811'>811 - RED BLOOD CELL DISORDERS W MCC</option>
+                            <option value='812'>812 - RED BLOOD CELL DISORDERS W/O MCC</option>
+                            <option value='853'>853 - INFECTIOUS &amp; PARASITIC DISEASES W O.R. PROCEDURE W MCC</option>
+                            <option value='870'>870 - SEPTICEMIA OR SEVERE SEPSIS W MV 96+ HOURS</option>
+                            <option value='871'>871 - SEPTICEMIA OR SEVERE SEPSIS W/O MV 96+ HOURS W MCC</option>
+                            <option value='872'>872 - SEPTICEMIA OR SEVERE SEPSIS W/O MV 96+ HOURS W/O MCC</option>
+                            <option value='885'>885 - PSYCHOSES</option>
+                            <option value='897'>897 - ALCOHOL/DRUG ABUSE OR DEPENDENCE W/O REHABILITATION THERAPY W/O MCC</option>
+                            <option value='917'>917 - POISONING &amp; TOXIC EFFECTS OF DRUGS W MCC</option>
+                            <option value='918'>918 - POISONING &amp; TOXIC EFFECTS OF DRUGS W/O MCC</option>
+                            <option value='948'>948 - SIGNS &amp; SYMPTOMS W/O MCC</option>
+                        </select>
+                    </div>
                     
-                    <label for="selectApc">
-                        Select Inpatient Service (by APC code)
-                    </label>
-                    <select id="selectApc">
-                        <option value='12'>12 - Level I Debridement &amp; Destruction</option>
-                        <option value='13'>13 - Level II Debridement &amp; Destruction</option>
-                        <option value='15'>15 - Level III Debridement &amp; Destruction</option>
-                        <option value='19'>19 - Level I Excision/ Biopsy</option>
-                        <option value='20'>20 - Level II Excision/ Biopsy</option>
-                        <option value='73'>73 - Level III Endoscopy Upper Airway</option>
-                        <option value='74'>74 - Level IV Endoscopy Upper Airway</option>
-                        <option value='78'>78 - Level III Pulmonary Treatment</option>
-                        <option value='96'>96 - Level II Noninvasive Physiologic Studies</option>
-                        <option value='203'>203 - Level IV Nerve Injections</option>
-                        <option value='204'>204 - Level I Nerve Injections</option>
-                        <option value='206'>206 - Level II Nerve Injections</option>
-                        <option value='207'>207 - Level III Nerve Injections</option>
-                        <option value='209'>209 - Level II Extended EEG, Sleep, and Cardiovascular Studies</option>
-                        <option value='265'>265 - Level I Diagnostic and Screening Ultrasound</option>
-                        <option value='267'>267 - Level III Diagnostic and Screening Ultrasound</option>
-                        <option value='269'>269 - Level II Echocardiogram Without Contrast</option>
-                        <option value='270'>270 - Level III Echocardiogram Without Contrast</option>
-                        <option value='336'>336 - Magnetic Resonance Imaging and Magnetic Resonance Angiography without Contrast</option>
-                        <option value='368'>368 - Level II Pulmonary Tests</option>
-                        <option value='369'>369 - Level III Pulmonary Tests</option>
-                        <option value='377'>377 - Level II Cardiac Imaging</option>
-                        <option value='604'>604 - Level 1 Hospital Clinic Visits</option>
-                        <option value='605'>605 - Level 2 Hospital Clinic Visits</option>
-                        <option value='606'>606 - Level 3 Hospital Clinic Visits</option>
-                        <option value='607'>607 - Level 4 Hospital Clinic Visits</option>
-                        <option value='608'>608 - Level 5 Hospital Clinic Visits</option>
-                        <option value='690'>690 - Level I Electronic Analysis of Devices</option>
-                        <option value='692'>692 - Level II Electronic Analysis of Devices</option>
-                        <option value='698'>698 - Level II Eye Tests &amp; Treatments</option>
-                    </select>
+                    <div id="selectApcGroup" class="hidden">
+                        <label for="selectApc">
+                            Select Outpatient Service (by APC code)
+                        </label>
+                        <select id="selectApc">
+                            <option value='12'>12 - Level I Debridement &amp; Destruction</option>
+                            <option value='13'>13 - Level II Debridement &amp; Destruction</option>
+                            <option value='15'>15 - Level III Debridement &amp; Destruction</option>
+                            <option value='19'>19 - Level I Excision/ Biopsy</option>
+                            <option value='20'>20 - Level II Excision/ Biopsy</option>
+                            <option value='73'>73 - Level III Endoscopy Upper Airway</option>
+                            <option value='74'>74 - Level IV Endoscopy Upper Airway</option>
+                            <option value='78'>78 - Level III Pulmonary Treatment</option>
+                            <option value='96'>96 - Level II Noninvasive Physiologic Studies</option>
+                            <option value='203'>203 - Level IV Nerve Injections</option>
+                            <option value='204'>204 - Level I Nerve Injections</option>
+                            <option value='206'>206 - Level II Nerve Injections</option>
+                            <option value='207'>207 - Level III Nerve Injections</option>
+                            <option value='209'>209 - Level II Extended EEG, Sleep, and Cardiovascular Studies</option>
+                            <option value='265'>265 - Level I Diagnostic and Screening Ultrasound</option>
+                            <option value='267'>267 - Level III Diagnostic and Screening Ultrasound</option>
+                            <option value='269'>269 - Level II Echocardiogram Without Contrast</option>
+                            <option value='270'>270 - Level III Echocardiogram Without Contrast</option>
+                            <option value='336'>336 - Magnetic Resonance Imaging and Magnetic Resonance Angiography without Contrast</option>
+                            <option value='368'>368 - Level II Pulmonary Tests</option>
+                            <option value='369'>369 - Level III Pulmonary Tests</option>
+                            <option value='377'>377 - Level II Cardiac Imaging</option>
+                            <option value='604'>604 - Level 1 Hospital Clinic Visits</option>
+                            <option value='605'>605 - Level 2 Hospital Clinic Visits</option>
+                            <option value='606'>606 - Level 3 Hospital Clinic Visits</option>
+                            <option value='607'>607 - Level 4 Hospital Clinic Visits</option>
+                            <option value='608'>608 - Level 5 Hospital Clinic Visits</option>
+                            <option value='690'>690 - Level I Electronic Analysis of Devices</option>
+                            <option value='692'>692 - Level II Electronic Analysis of Devices</option>
+                            <option value='698'>698 - Level II Eye Tests &amp; Treatments</option>
+                        </select>
+                    </div>
                     
                     
                 </form>
             </div>
             <div class="pure-u-1 centered">
-                <div id="map1" class="map"></div>
+                <h3>Reduction of Payment to Charges (%)</h3>
+                <div id="reduct_map" class="map"></div>
             </div>
-            <div class="pure-u-1 centered">
-                <div id="map2" class="map"></div>
+            <div class="pure-g">
+                <div class="pure-u-1-2 centered">
+                    <h3>Charges to Medicare ($)</h3>
+                    <div id="chrg_map" class="map"></div>
+                </div>
+                <div class="pure-u-1-2 centered">
+                    <h3>Payments from Medicare ($)</h3>
+                    <div id="pmt_map" class="map"></div>
+                </div>
             </div>
-            <div class="pure-u-1 centered">
-                <div id="map3" class="map"></div>
+            <div class="pure-g">
+                <div class="pure-u-1-3">
+                    <div id="reductLegend" class="legend">
+                        
+                    </div>
+                </div>
+                <div class="pure-u-1-3">
+                    <div id="chrgLegend" class="legend">
+                        
+                    </div>
+                </div>
+                <div class="pure-u-1-3">
+                    <div id="pmtLegend" class="legend">
+                        
+                    </div>
+                </div>
             </div>
         </div>
         
+        <footer>
+            FOOTER
+        </footer>
         
- 
         <script src="lib/d3.v3.min.js"></script>
         <script src="lib/queue.v1.min.js"></script>
         <script src="lib/topojson.v1.min.js"></script>

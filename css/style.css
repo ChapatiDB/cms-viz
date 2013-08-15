@@ -2,10 +2,19 @@ body {
     margin: auto; /* center in viewport */
     font-family: 'Raleway', sans-serif;
     text-rendering: optimizeLegibility;
+    width: 960px;
+    padding-bottom: 100px;
 }
 
 header {
 
+}
+
+footer {
+    margin: 40px 0;
+    padding: 10px 0 0 0;
+    text-align: center;
+    border-top: 1px dashed #ccc;
 }
 
 strong {
@@ -16,6 +25,27 @@ select {
     width: 60%;
     min-width: 300px;
     max-width: 600px;
+}
+
+.hidden {
+    display: none;
+}
+
+.pure-button {
+    color: white;
+    border-radius: 4px;
+    text-shadow: none;
+    background: #ccc; 
+}
+
+.pure-button-active {
+    color: #fff;
+    text-shadow: none;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: rgb(66, 184, 221); /* this is a light blue */
+    /*background: rgb(28, 126, 157); this is a darker blue*/
+    box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset, 0 0 6px rgba(0,0,0, 0.2) inset;
+    
 }
 
 .centered {
@@ -29,11 +59,18 @@ select {
     padding:5px;
 }
 
+
+
+#reduct_map {
+    width: 600px;
+    height: 400px;
+}
+
 path {
-    transition: fill 600ms linear;
-    -o-transition: fill 600ms linear;
-    -moz-transition: fill 600ms linear;
-    -webkit-transition: fill 600ms linear;
+    transition: fill 500ms linear;
+    -o-transition: fill 500ms linear;
+    -moz-transition: fill 500ms linear;
+    -webkit-transition: fill 500ms linear;
 }
 
 .region {
