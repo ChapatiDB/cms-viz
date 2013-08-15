@@ -35,18 +35,25 @@ module.exports = (grunt) ->
           'coffee:src'
         ]
 
+    uglify:
+      js:
+        files:
+          './dist/cmsviz.min.js': ['./dist/cmsviz.js']
+
   # Register grunt tasks supplied by grunt-contrib-*.
   # Referenced in package.json.
   # https://github.com/gruntjs/grunt-contrib
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-contrib-uglify'
 
   # Compiles the app with non-optimized build settings.
   # Enter the following command at the command line to execute this build task:
   # grunt
   grunt.registerTask 'default', [
     'coffee:src'
+    'uglify'
   ]
 
 
