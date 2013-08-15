@@ -1,29 +1,30 @@
 {
-    "name": "cms-viz",
-    "version": "0.0.0",
-    "author": {
-        "name": "James Seppi",
-        "url": "http://www.github.com/jseppi"
-    },
-    "description": "CMS Hospital Charge Data Visualization",
-    "contributors": [
-        {
-            "name": "James Seppi",
-            "email": "james.seppi@gmail.com",
-            "url": "https://github.com/jseppi"
-        }
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/jseppi/cms-viz.git"
-    },
-    "devDependencies": {
-        "coffee-script": "~1.6.1",
-        "grunt": "~0.4.0",
-        "grunt-cli": "~0.1.7",
-        "grunt-contrib-clean": "~0.4.0",
-        "grunt-contrib-coffee": "~0.6.0",
-        "grunt-contrib-copy": "~0.4.0",
-        "grunt-contrib-watch": "~0.3.1"
+  "name": "cms-viz",
+  "version": "0.0.0",
+  "author": {
+    "name": "James Seppi",
+    "url": "http://www.github.com/jseppi"
+  },
+  "description": "CMS Hospital Charge Data Visualization",
+  "contributors": [
+    {
+      "name": "James Seppi",
+      "email": "james.seppi@gmail.com",
+      "url": "https://github.com/jseppi"
     }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jseppi/cms-viz.git"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.6.1",
+    "grunt": "~0.4.0",
+    "grunt-cli": "~0.1.7",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-coffee": "~0.6.0",
+    "grunt-contrib-copy": "~0.4.0",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-uglify": "~0.2.2"
+  }
 }
