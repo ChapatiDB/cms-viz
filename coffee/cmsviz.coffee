@@ -104,11 +104,24 @@ fetchAndUpdateRegions = (type, code) ->
         )
     return
 
-
 updateLegend = (name, breaks) ->
     console.log "update legend for #{name} with #{breaks}"
 
     svg = MAPS[name].leg_svg
+
+    svg.selectAll('text').remove()
+
+    #TODO: Format the break numbers for display
+    # (use %, $) and append a <=
+    # as well as a + for the last one and a < for the first one
+    for i in [5..0] by -1
+        txt = if i is 0 then 'No data' else "#{breaks[i-1]}"
+
+        svg.append("text")
+            .attr('x', 30)
+            .attr('y', (Math.abs(i-5)+1) * 25 - 5)
+            .text(txt)
+
 
     return
 
@@ -119,11 +132,6 @@ updateRegions = (name, pmt_info) ->
     regions = MAPS[name].regions
 
     jenks_breaks = ss.jenks(pmt_info_entries.map((d) -> +d.value[name]), 4)
-
-    console.log "breaks", jenks_breaks.length, jenks_breaks
-
-    #TODO: check threshold.range() documentation regarding N
-    # https://github.com/mbostock/d3/wiki/Quantitative-Scales#wiki-threshold_range
 
     thresholds = d3.scale.threshold()
         .domain(jenks_breaks)
@@ -225,10 +233,9 @@ create_legend_svg = (dom_id) ->
         .style('width', w)
         .style('height', h)
 
-    #TODO: build all the rectangles here
     for i in [0..5]
         cls = if i is 5 then 'empty' else "q#{Math.abs(i-5+1)}-5"
-        console.log i*25
+
         svg.append("rect")
             .attr('x', 0)
             .attr('y', i * 25)

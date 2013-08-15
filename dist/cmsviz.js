@@ -92,9 +92,14 @@
   };
 
   updateLegend = function(name, breaks) {
-    var svg;
+    var i, svg, txt, _i;
     console.log("update legend for " + name + " with " + breaks);
     svg = MAPS[name].leg_svg;
+    svg.selectAll('text').remove();
+    for (i = _i = 5; _i >= 0; i = _i += -1) {
+      txt = i === 0 ? 'No data' : "" + breaks[i - 1];
+      svg.append("text").attr('x', 30).attr('y', (Math.abs(i - 5) + 1) * 25 - 5).text(txt);
+    }
   };
 
   updateRegions = function(name, pmt_info) {
@@ -104,7 +109,6 @@
     jenks_breaks = ss.jenks(pmt_info_entries.map(function(d) {
       return +d.value[name];
     }), 4);
-    console.log("breaks", jenks_breaks.length, jenks_breaks);
     thresholds = d3.scale.threshold().domain(jenks_breaks).range(d3.range(5).map(function(i) {
       return "q" + i + "-5";
     }));
@@ -178,7 +182,6 @@
     svg = d3.select(dom_id).append('svg').style('width', w).style('height', h);
     for (i = _i = 0; _i <= 5; i = ++_i) {
       cls = i === 5 ? 'empty' : "q" + (Math.abs(i - 5 + 1)) + "-5";
-      console.log(i * 25);
       svg.append("rect").attr('x', 0).attr('y', i * 25).attr('width', 25).attr('height', 25).attr('class', cls);
     }
     return svg;
