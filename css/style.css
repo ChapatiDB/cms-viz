@@ -2,12 +2,20 @@ body {
     margin: auto; /* center in viewport */
     font-family: 'Raleway', sans-serif;
     text-rendering: optimizeLegibility;
-    width: 960px;
+    width: 900px;
     padding-bottom: 100px;
 }
 
 header {
     text-align: center;
+    margin:auto;
+    width:700px;
+}
+
+.intro {
+    text-align: left;
+    width: 600px;
+    margin:auto;
 }
 
 footer {
@@ -15,6 +23,7 @@ footer {
     padding: 10px 0 0 0;
     text-align: center;
     border-top: 1px dashed #ccc;
+    font-size:0.9em;
 }
 
 strong {
@@ -53,17 +62,19 @@ select {
 }
 
 .map {
-    width:500px;
-    height:300px;
+    width:400px;
+    height:220px;
     margin:auto;
-    padding:5px;
 }
 
-
+.legend {
+    width: 150px;
+    display: inline-block;
+}
 
 #reduct_map {
     width: 600px;
-    height: 400px;
+    height: 330px;
 }
 
 path {
@@ -84,7 +95,7 @@ path {
 }
 
 .empty { fill: #bbb; }
-.active { 	stroke: white; stroke-width: 1;}
+.active { stroke: white; stroke-width: 1.5px;}
 
 /* ColorBrewer yellowish-red */
 #chrgLegend .q0-5, .hrr_chrg .q0-5 { fill:rgb(255,255,204); }

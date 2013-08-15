@@ -8,12 +8,12 @@
 # Make legend 300w x 150h
 # 6 divisions of 25px x 25px (plus text to the rigt)
 
-LEGEND_SIZE = [300, 150]
+LEGEND_SIZE = [120, 150]
 LEGEND_BOX_SIZE = 25 # actually just do height/6
 
 MAPS = {
     'chrg': {
-        size: [400, 300]
+        size: [400, 220]
         display: "Average Charge"
         value_fmt: d3.format('$,.0f')
         geo_path: null
@@ -24,7 +24,7 @@ MAPS = {
         leg_svg: null
     }
     'pmt': {
-        size: [400, 300]
+        size: [400, 220]
         display: "Average Payment"
         value_fmt: d3.format('$,.0f')
         geo_path: null
@@ -35,7 +35,7 @@ MAPS = {
         leg_svg: null
     }
     'reduct': {
-        size: [600, 400]
+        size: [600, 330]
         display: "Reduction"
         value_fmt: (x) -> return d3.format('.0f')(x) + '%'
         geo_path: null
@@ -87,7 +87,7 @@ zoomMaps = (d) ->
         transition = paths.transition()
             .duration(750)
             .attr("transform", "translate(#{width/2},#{height/2})scale(#{k})translate(#{-x},#{-y})")
-            .attr("stroke-width", 1.5/k+"px")
+            .attr("stroke-width", 1/k+"px")
             .delay(m.delay)
 
     return
@@ -105,21 +105,20 @@ fetchAndUpdateRegions = (type, code) ->
     return
 
 updateLegend = (name, breaks) ->
-    console.log "update legend for #{name} with #{breaks}"
-
     svg = MAPS[name].leg_svg
 
     svg.selectAll('text').remove()
 
-    #TODO: Format the break numbers for display
-    # (use %, $) and append a <=
-    # as well as a + for the last one and a < for the first one
     for i in [5..0] by -1
-        txt = if i is 0 then 'No data' else "#{breaks[i-1]}"
+        if i is 0 
+            txt = "No data"
+        else
+            num = MAPS[name].value_fmt(breaks[i-1])
+            txt = ">= #{num}"
 
         svg.append("text")
             .attr('x', 30)
-            .attr('y', (Math.abs(i-5)+1) * 25 - 5)
+            .attr('y', (Math.abs(i-5)+1) * 25 - 8)
             .text(txt)
 
 
@@ -131,11 +130,15 @@ updateRegions = (name, pmt_info) ->
 
     regions = MAPS[name].regions
 
-    jenks_breaks = ss.jenks(pmt_info_entries.map((d) -> +d.value[name]), 4)
+    vals = pmt_info_entries.map((d) -> Math.ceil(+d.value[name])+1)
 
+    jenks_breaks = ss.jenks(vals, 4)
+    jenks_breaks.unshift(0)
+
+    #TODO: This is all screwed up!
     thresholds = d3.scale.threshold()
         .domain(jenks_breaks)
-        .range(d3.range(5).map((i) -> "q#{i}-5" ))
+        .range(d3.range(6).map((i) -> "q#{i-1}-5"))
 
     updateLegend(name, jenks_breaks)
 
@@ -246,7 +249,6 @@ create_legend_svg = (dom_id) ->
     return svg
 
 ready = (error, hrr) ->
-
     #Then have a method that uses the new data to change the colors.
     #The current operation is that the maps are completely recreated each time,
     # so we don't get any animation.
@@ -262,7 +264,6 @@ ready = (error, hrr) ->
     MAPS.chrg.regions = createMap('chrg', hrr)
     MAPS.pmt.regions = createMap('pmt', hrr)
     MAPS.reduct.regions = createMap('reduct', hrr)   
-
 
     $selectDrg = d3.select('#selectDrg')
     $selectDrgGroup = d3.select('#selectDrgGroup')

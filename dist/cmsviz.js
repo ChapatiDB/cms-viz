@@ -1,13 +1,13 @@
 (function() {
   var LEGEND_BOX_SIZE, LEGEND_SIZE, MAPS, createMap, create_legend_svg, create_map_svg, fetchAndUpdateRegions, ready, updateLegend, updateRegions, zoomMaps;
 
-  LEGEND_SIZE = [300, 150];
+  LEGEND_SIZE = [120, 150];
 
   LEGEND_BOX_SIZE = 25;
 
   MAPS = {
     'chrg': {
-      size: [400, 300],
+      size: [400, 220],
       display: "Average Charge",
       value_fmt: d3.format('$,.0f'),
       geo_path: null,
@@ -18,7 +18,7 @@
       leg_svg: null
     },
     'pmt': {
-      size: [400, 300],
+      size: [400, 220],
       display: "Average Payment",
       value_fmt: d3.format('$,.0f'),
       geo_path: null,
@@ -29,7 +29,7 @@
       leg_svg: null
     },
     'reduct': {
-      size: [600, 400],
+      size: [600, 330],
       display: "Reduction",
       value_fmt: function(x) {
         return d3.format('.0f')(x) + '%';
@@ -76,7 +76,7 @@
         return false;
       });
       paths = svg.selectAll("g").selectAll("path");
-      return transition = paths.transition().duration(750).attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")scale(" + k + ")translate(" + (-x) + "," + (-y) + ")").attr("stroke-width", 1.5 / k + "px").delay(m.delay);
+      return transition = paths.transition().duration(750).attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")scale(" + k + ")translate(" + (-x) + "," + (-y) + ")").attr("stroke-width", 1 / k + "px").delay(m.delay);
     });
   };
 
@@ -92,25 +92,31 @@
   };
 
   updateLegend = function(name, breaks) {
-    var i, svg, txt, _i;
-    console.log("update legend for " + name + " with " + breaks);
+    var i, num, svg, txt, _i;
     svg = MAPS[name].leg_svg;
     svg.selectAll('text').remove();
     for (i = _i = 5; _i >= 0; i = _i += -1) {
-      txt = i === 0 ? 'No data' : "" + breaks[i - 1];
-      svg.append("text").attr('x', 30).attr('y', (Math.abs(i - 5) + 1) * 25 - 5).text(txt);
+      if (i === 0) {
+        txt = "No data";
+      } else {
+        num = MAPS[name].value_fmt(breaks[i - 1]);
+        txt = ">= " + num;
+      }
+      svg.append("text").attr('x', 30).attr('y', (Math.abs(i - 5) + 1) * 25 - 8).text(txt);
     }
   };
 
   updateRegions = function(name, pmt_info) {
-    var jenks_breaks, pmt_info_entries, regions, thresholds;
+    var jenks_breaks, pmt_info_entries, regions, thresholds, vals;
     pmt_info_entries = d3.entries(pmt_info);
     regions = MAPS[name].regions;
-    jenks_breaks = ss.jenks(pmt_info_entries.map(function(d) {
-      return +d.value[name];
-    }), 4);
-    thresholds = d3.scale.threshold().domain(jenks_breaks).range(d3.range(5).map(function(i) {
-      return "q" + i + "-5";
+    vals = pmt_info_entries.map(function(d) {
+      return Math.ceil(+d.value[name]) + 1;
+    });
+    jenks_breaks = ss.jenks(vals, 4);
+    jenks_breaks.unshift(0);
+    thresholds = d3.scale.threshold().domain(jenks_breaks).range(d3.range(6).map(function(i) {
+      return "q" + (i - 1) + "-5";
     }));
     updateLegend(name, jenks_breaks);
     regions.attr("class", function(d) {
