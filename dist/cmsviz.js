@@ -177,7 +177,7 @@
     var h, svg, w;
     w = MAPS[name].size[0];
     h = MAPS[name].size[1];
-    svg = d3.select(dom_id).append('svg').style('width', w).style('height', h);
+    svg = d3.select(dom_id).append('svg').attr('width', w).attr('height', h);
     return svg;
   };
 
@@ -185,7 +185,7 @@
     var cls, h, i, svg, w, _i;
     w = LEGEND_SIZE[0];
     h = LEGEND_SIZE[1];
-    svg = d3.select(dom_id).append('svg').style('width', w).style('height', h);
+    svg = d3.select(dom_id).append('svg').attr('width', w).attr('height', h);
     for (i = _i = 0; _i <= 5; i = ++_i) {
       cls = i === 5 ? 'empty' : "q" + (Math.abs(i - 5 + 1)) + "-5";
       svg.append("rect").attr('x', 0).attr('y', i * 25).attr('width', 25).attr('height', 25).attr('class', cls);

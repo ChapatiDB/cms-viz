@@ -223,8 +223,8 @@ create_map_svg = (name, dom_id) ->
     h = MAPS[name].size[1]
     
     svg = d3.select(dom_id).append('svg')
-        .style('width', w)
-        .style('height', h )
+        .attr('width', w)
+        .attr('height', h )
 
     return svg
 
@@ -233,8 +233,8 @@ create_legend_svg = (dom_id) ->
     h = LEGEND_SIZE[1]
 
     svg = d3.select(dom_id).append('svg')
-        .style('width', w)
-        .style('height', h)
+        .attr('width', w)
+        .attr('height', h)
 
     for i in [0..5]
         cls = if i is 5 then 'empty' else "q#{Math.abs(i-5+1)}-5"
