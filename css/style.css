@@ -77,6 +77,26 @@ select {
     height: 330px;
 }
 
+#value_inst {
+    font-style: italic;
+    font-size:smaller;
+}
+
+.values_box {
+    border:1px dashed #ccc;
+    margin-top:89px;
+    text-align: left;
+    padding: 8px;
+}
+
+.values_box h4 {
+    text-align: center;
+}
+
+.value_entry span {
+    font-weight: bold;
+}
+
 path {
     transition: fill 500ms linear;
     -o-transition: fill 500ms linear;

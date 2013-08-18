@@ -1,5 +1,5 @@
 (function() {
-  var LEGEND_BOX_SIZE, LEGEND_SIZE, MAPS, createMap, create_legend_svg, create_map_svg, fetchAndUpdateRegions, ready, updateLegend, updateRegions, zoomMaps;
+  var LEGEND_BOX_SIZE, LEGEND_SIZE, MAPS, createMap, create_legend_svg, create_map_svg, curr_pmt_info, fetchAndUpdateRegions, ready, updateLegend, updateRegions, updateValuesBox, zoomMaps;
 
   LEGEND_SIZE = [120, 150];
 
@@ -14,7 +14,7 @@
       svg: null,
       regions: null,
       centered: null,
-      delay: 250,
+      delay: 350,
       leg_svg: null
     },
     'pmt': {
@@ -25,7 +25,7 @@
       svg: null,
       regions: null,
       centered: null,
-      delay: 250,
+      delay: 350,
       leg_svg: null
     },
     'reduct': {
@@ -42,6 +42,8 @@
       leg_svg: null
     }
   };
+
+  curr_pmt_info = null;
 
   zoomMaps = function(d) {
     d3.map(MAPS).forEach(function(name, m) {
@@ -80,11 +82,34 @@
     });
   };
 
+  updateValuesBox = function(d) {
+    var hrr_id, info;
+    if (!((d.properties != null) && (curr_pmt_info != null))) {
+      d3.select("#over_name").classed("hidden", true);
+      return;
+    }
+    d3.select("#over_name").text(d.properties.HRRCITY);
+    d3.select("#over_name").classed("hidden", false);
+    hrr_id = d.properties.HRRNUM;
+    info = curr_pmt_info[hrr_id];
+    if (info == null) {
+      d3.select("#no_data").classed("hidden", false);
+      d3.select(".has_data").classed("hidden", true);
+      return;
+    }
+    d3.select("#no_data").classed("hidden", true);
+    d3.select('.has_data').classed("hidden", false);
+    d3.select("#over_chrg").text(MAPS['chrg'].value_fmt(info.chrg));
+    d3.select("#over_pmt").text(MAPS['pmt'].value_fmt(info.pmt));
+    d3.select("#over_reduct").text(MAPS['reduct'].value_fmt(info.reduct));
+  };
+
   fetchAndUpdateRegions = function(type, code) {
     queue().defer(d3.json, "data/procs/" + type + "_" + code + "_hrr.json").await(function(err, pmt_info) {
       if (err) {
         alert("Sorry, an error has occurred");
       }
+      curr_pmt_info = pmt_info;
       updateRegions('chrg', pmt_info);
       updateRegions('pmt', pmt_info);
       return updateRegions('reduct', pmt_info);
@@ -126,20 +151,6 @@
       }
       return "empty";
     });
-    regions.selectAll("title").text(function(d) {
-      var display_name, n, txt, value_fmt;
-      if ((d != null ? d.properties : void 0) != null) {
-        txt = "HRR for " + d.properties.HRRCITY;
-        value_fmt = MAPS[name].value_fmt;
-        display_name = MAPS[name].display;
-        if (pmt_info[d.properties.HRRNUM] != null) {
-          n = value_fmt(pmt_info[d.properties.HRRNUM][name]);
-          txt += "\n" + display_name + ": " + n;
-        }
-        return txt;
-      }
-      return null;
-    });
     if (MAPS[name].centered != null) {
       d3.map(MAPS).forEach(function(n, m) {
         return m.svg.selectAll("g").selectAll("path").classed("active", function(d) {
@@ -162,13 +173,7 @@
     geo_path = MAPS[name].geo_path;
     svg = MAPS[name].svg;
     region_feats = topojson.feature(hrr, hrr.objects.HRR_Bdry).features;
-    regions = svg.append("g").attr("class", "region hrr_" + name).selectAll("path").data(region_feats).enter().append("path").attr("d", geo_path).on("click", zoomMaps);
-    regions.append("title").text(function(d) {
-      if ((d != null ? d.properties : void 0) != null) {
-        return "HRR for " + d.properties.HRRCITY;
-      }
-      return null;
-    });
+    regions = svg.append("g").attr("class", "region hrr_" + name).selectAll("path").data(region_feats).enter().append("path").attr("d", geo_path).on("click", zoomMaps).on("mouseover", updateValuesBox);
     svg.append("g").append("path").datum(topojson.mesh(hrr, hrr.objects.HRR_Bdry)).attr("d", geo_path).attr("class", "region_bdry");
     return regions;
   };

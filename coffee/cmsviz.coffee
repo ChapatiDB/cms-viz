@@ -20,7 +20,7 @@ MAPS = {
         svg: null
         regions: null
         centered: null
-        delay: 250
+        delay: 350
         leg_svg: null
     }
     'pmt': {
@@ -31,7 +31,7 @@ MAPS = {
         svg: null
         regions: null
         centered: null
-        delay: 250
+        delay: 350
         leg_svg: null
     }
     'reduct': {
@@ -45,8 +45,9 @@ MAPS = {
         delay: 0
         leg_svg: null
     }
-
 }
+
+curr_pmt_info = null
 
 zoomMaps = (d) ->
     d3.map(MAPS).forEach (name, m) ->
@@ -93,11 +94,39 @@ zoomMaps = (d) ->
     return
 
 
+updateValuesBox = (d) ->
+    unless d.properties? and curr_pmt_info?
+        d3.select("#over_name").classed("hidden", true)
+        return
+
+    d3.select("#over_name").text(d.properties.HRRCITY)
+    d3.select("#over_name").classed("hidden", false)
+
+    hrr_id = d.properties.HRRNUM
+    info = curr_pmt_info[hrr_id]
+    if not info?
+        d3.select("#no_data").classed("hidden", false)
+        d3.select(".has_data").classed("hidden", true)
+        return
+
+    d3.select("#no_data").classed("hidden", true)
+    d3.select('.has_data').classed("hidden", false)
+    
+    d3.select("#over_chrg").text(
+        MAPS['chrg'].value_fmt(info.chrg))
+    d3.select("#over_pmt").text(
+        MAPS['pmt'].value_fmt(info.pmt))
+    d3.select("#over_reduct").text(
+        MAPS['reduct'].value_fmt(info.reduct))
+
+    return
+
 fetchAndUpdateRegions = (type, code) ->
     queue()
         .defer(d3.json, "data/procs/#{type}_#{code}_hrr.json")
         .await((err, pmt_info) ->
             if err then alert "Sorry, an error has occurred"
+            curr_pmt_info = pmt_info
             updateRegions('chrg', pmt_info)
             updateRegions('pmt', pmt_info)
             updateRegions('reduct', pmt_info)
@@ -120,7 +149,6 @@ updateLegend = (name, breaks) ->
             .attr('x', 30)
             .attr('y', (Math.abs(i-5)+1) * 25 - 8)
             .text(txt)
-
 
     return
 
@@ -148,22 +176,22 @@ updateRegions = (name, pmt_info) ->
         return "empty"
     )
 
-    regions.selectAll("title")
-        .text((d) ->
-            if d?.properties?
-                txt = "HRR for #{d.properties.HRRCITY}"
+    # regions.selectAll("title")
+    #     .text((d) ->
+    #         if d?.properties?
+    #             txt = "HRR for #{d.properties.HRRCITY}"
 
-                value_fmt = MAPS[name].value_fmt
-                display_name = MAPS[name].display
+    #             value_fmt = MAPS[name].value_fmt
+    #             display_name = MAPS[name].display
 
-                if pmt_info[d.properties.HRRNUM]?
-                    n = value_fmt(pmt_info[d.properties.HRRNUM][name])
-                    txt += "\n#{display_name}: #{n}"
+    #             if pmt_info[d.properties.HRRNUM]?
+    #                 n = value_fmt(pmt_info[d.properties.HRRNUM][name])
+    #                 txt += "\n#{display_name}: #{n}"
 
-                return txt
+    #             return txt
 
-            return null
-        )
+    #         return null
+    #     )
 
     if MAPS[name].centered?
         d3.map(MAPS).forEach (n, m) ->
@@ -201,13 +229,14 @@ createMap = (name, hrr) ->
                     .append("path")
                         .attr("d", geo_path)
                         .on("click", zoomMaps)
+                        .on("mouseover", updateValuesBox)
 
-    regions.append("title")
-        .text((d) ->
-            if d?.properties?
-                return "HRR for #{d.properties.HRRCITY}"
-            return null
-        )
+    # regions.append("title")
+    #     .text((d) ->
+    #         if d?.properties?
+    #             return "HRR for #{d.properties.HRRCITY}"
+    #         return null
+    #     )
 
     svg.append("g")
         .append("path")
