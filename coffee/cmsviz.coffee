@@ -1,13 +1,4 @@
 
-#TODO: LEGENDS:
-# see http://www.dashingd3js.com/svg-basic-shapes-and-d3js
-# make 6 squares for each map in a separate svg within the same div
-# probably better to have vertically-aligned.
-# then update when the jenks breaks change
-
-# Make legend 300w x 150h
-# 6 divisions of 25px x 25px (plus text to the rigt)
-
 LEGEND_SIZE = [120, 150]
 LEGEND_BOX_SIZE = 25 # actually just do height/6
 
@@ -37,7 +28,7 @@ MAPS = {
     'reduct': {
         size: [600, 330]
         display: "Reduction"
-        value_fmt: (x) -> return d3.format('.0f')(x) + '%'
+        value_fmt: (x) -> return d3.format('.1f')(x) + '%'
         geo_path: null
         svg: null
         regions: null
@@ -163,7 +154,8 @@ updateRegions = (name, pmt_info) ->
     jenks_breaks = ss.jenks(vals, 4)
     jenks_breaks.unshift(0)
 
-    #TODO: This is all screwed up!
+    jenks_breaks = jenks_breaks.map((v) -> return Math.ceil(v))
+    
     thresholds = d3.scale.threshold()
         .domain(jenks_breaks)
         .range(d3.range(6).map((i) -> "q#{i-1}-5"))
@@ -175,23 +167,6 @@ updateRegions = (name, pmt_info) ->
             return thresholds(pmt_info[d.properties.HRRNUM][name])
         return "empty"
     )
-
-    # regions.selectAll("title")
-    #     .text((d) ->
-    #         if d?.properties?
-    #             txt = "HRR for #{d.properties.HRRCITY}"
-
-    #             value_fmt = MAPS[name].value_fmt
-    #             display_name = MAPS[name].display
-
-    #             if pmt_info[d.properties.HRRNUM]?
-    #                 n = value_fmt(pmt_info[d.properties.HRRNUM][name])
-    #                 txt += "\n#{display_name}: #{n}"
-
-    #             return txt
-
-    #         return null
-    #     )
 
     if MAPS[name].centered?
         d3.map(MAPS).forEach (n, m) ->
@@ -230,13 +205,6 @@ createMap = (name, hrr) ->
                         .attr("d", geo_path)
                         .on("click", zoomMaps)
                         .on("mouseover", updateValuesBox)
-
-    # regions.append("title")
-    #     .text((d) ->
-    #         if d?.properties?
-    #             return "HRR for #{d.properties.HRRCITY}"
-    #         return null
-    #     )
 
     svg.append("g")
         .append("path")

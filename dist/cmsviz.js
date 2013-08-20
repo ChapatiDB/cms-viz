@@ -32,7 +32,7 @@
       size: [600, 330],
       display: "Reduction",
       value_fmt: function(x) {
-        return d3.format('.0f')(x) + '%';
+        return d3.format('.1f')(x) + '%';
       },
       geo_path: null,
       svg: null,
@@ -140,6 +140,9 @@
     });
     jenks_breaks = ss.jenks(vals, 4);
     jenks_breaks.unshift(0);
+    jenks_breaks = jenks_breaks.map(function(v) {
+      return Math.ceil(v);
+    });
     thresholds = d3.scale.threshold().domain(jenks_breaks).range(d3.range(6).map(function(i) {
       return "q" + (i - 1) + "-5";
     }));
