@@ -1,5 +1,5 @@
 (function() {
-  var LEGEND_BOX_SIZE, LEGEND_SIZE, MAPS, createMap, create_legend_svg, create_map_svg, curr_pmt_info, fetchAndUpdateRegions, ready, updateLegend, updateRegions, updateValuesBox, zoomMaps;
+  var LEGEND_BOX_SIZE, LEGEND_SIZE, MAPS, clearValuesBox, createMap, create_legend_svg, create_map_svg, curr_pmt_info, fetchAndUpdateRegions, ready, updateLegend, updateRegions, updateValuesBox, zoomMaps;
 
   LEGEND_SIZE = [120, 150];
 
@@ -104,6 +104,12 @@
     d3.select("#over_reduct").text(MAPS['reduct'].value_fmt(info.reduct));
   };
 
+  clearValuesBox = function() {
+    d3.select("#over_name").classed("hidden", true);
+    d3.select("#no_data").classed("hidden", true);
+    d3.select(".has_data").classed("hidden", true);
+  };
+
   fetchAndUpdateRegions = function(type, code) {
     queue().defer(d3.json, "data/procs/" + type + "_" + code + "_hrr.json").await(function(err, pmt_info) {
       if (err) {
@@ -176,7 +182,7 @@
     geo_path = MAPS[name].geo_path;
     svg = MAPS[name].svg;
     region_feats = topojson.feature(hrr, hrr.objects.HRR_Bdry).features;
-    regions = svg.append("g").attr("class", "region hrr_" + name).selectAll("path").data(region_feats).enter().append("path").attr("d", geo_path).on("click", zoomMaps).on("mouseover", updateValuesBox);
+    regions = svg.append("g").attr("class", "region hrr_" + name).selectAll("path").data(region_feats).enter().append("path").attr("d", geo_path).on("click", zoomMaps).on("mouseenter", updateValuesBox).on("mouseleave", clearValuesBox);
     svg.append("g").append("path").datum(topojson.mesh(hrr, hrr.objects.HRR_Bdry)).attr("d", geo_path).attr("class", "region_bdry");
     return regions;
   };

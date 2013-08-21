@@ -112,6 +112,14 @@ updateValuesBox = (d) ->
 
     return
 
+
+clearValuesBox = () ->
+    d3.select("#over_name").classed("hidden", true)
+    d3.select("#no_data").classed("hidden", true)
+    d3.select(".has_data").classed("hidden", true)
+    return
+  
+
 fetchAndUpdateRegions = (type, code) ->
     queue()
         .defer(d3.json, "data/procs/#{type}_#{code}_hrr.json")
@@ -204,7 +212,8 @@ createMap = (name, hrr) ->
                     .append("path")
                         .attr("d", geo_path)
                         .on("click", zoomMaps)
-                        .on("mouseover", updateValuesBox)
+                        .on("mouseenter", updateValuesBox)
+                        .on("mouseleave", clearValuesBox)
 
     svg.append("g")
         .append("path")
